@@ -1,6 +1,24 @@
 <!doctype html>
 <html lang="fa" dir="rtl">
   <head>
+    <script id="hatch-space-target">
+    (() => {
+      const params = new URLSearchParams(location.hash.slice(1));
+      const root = document.documentElement;
+      if (params.get("hatch_target") === "tv") root.dataset.hatchTarget = "tv";
+      const widget = params.get("hatch_view") === "widget";
+      root.dataset.hatchView = widget ? "widget" : "app";
+      if (widget) {
+        root.dataset.hatchWidget = params.get("hatch_widget") || "default";
+        root.dataset.hatchInstance = params.get("hatch_instance") || "";
+        const sizes = ["small", "medium", "large", "watch", "watch_round"];
+        root.dataset.hatchSize = sizes.includes(params.get("hatch_size")) ? params.get("hatch_size") : "small";
+        const style = document.createElement("style");
+        style.textContent = 'html[data-hatch-view="widget"], html[data-hatch-view="widget"] body { background: transparent; }';
+        document.head.prepend(style);
+      }
+    })();
+  </script>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="color-scheme" content="light dark" />
@@ -132,7 +150,6 @@
       }
       .quick-btn .ic svg{width:30px; height:30px; stroke:var(--brand)}
       .quick-btn:active{transform:scale(.98)}
-      .quick-note{margin-top:16px}
 
       /* notebook */
       .filters{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px}
@@ -195,12 +212,7 @@
       .field:focus{outline:2px solid var(--brand); outline-offset:1px; border-color:var(--brand)}
       textarea.field{min-height:52px; resize:vertical}
       .hint{color:var(--muted); font-size:.88rem; margin-top:5px}
-      .steps{margin:0; padding-inline-start:22px}
-      .steps li{margin-bottom:9px}
-      .disclaimer{
-        border:1.5px solid var(--amber-ink); background:var(--amber-bg); color:var(--amber-ink);
-        border-radius:14px; padding:13px 16px; font-weight:700; margin-bottom:14px;
-      }
+
 
       /* bottom nav */
       nav.bottom{
@@ -244,7 +256,91 @@
       @media (prefers-color-scheme: dark){ .toast{background:var(--brand); color:#06231b} }
       .toast.show{opacity:1; transform:translateX(-50%) translateY(0)}
 
-      footer.note{color:var(--muted); font-size:.9rem; text-align:center; padding:8px 10px 0}
+      /* ---------- watch / widget view (Apple Watch & Wear OS) ---------- */
+      #widgetWatch{display:none}
+      html[data-hatch-view="widget"] .app,
+      html[data-hatch-view="widget"] nav.bottom,
+      html[data-hatch-view="widget"] .overlay,
+      html[data-hatch-view="widget"] .toast{display:none !important}
+      html[data-hatch-view="widget"] body{font-size:15px; line-height:1.45}
+      html[data-hatch-view="widget"] #widgetWatch{
+        display:flex; flex-direction:column; justify-content:center; gap:6px;
+        min-height:100vh; padding:14px 16px; color:var(--ink);
+        background:var(--surface); border:1px solid var(--line); border-radius:22px;
+      }
+      #widgetWatch .w-head{display:flex; align-items:center; gap:8px; font-weight:900; font-size:1rem}
+      #widgetWatch .w-head .logo{width:30px; height:30px; border-radius:9px}
+      #widgetWatch .w-head .logo svg{width:17px; height:17px}
+      #widgetWatch .w-head .w-date{margin-inline-start:auto; color:var(--muted); font-size:.78rem; font-weight:500}
+      #widgetWatch .w-glucose{display:flex; align-items:baseline; gap:7px}
+      #widgetWatch .w-glucose .v{font-size:2.5rem; font-weight:900; line-height:1.1}
+      #widgetWatch .w-glucose .k{color:var(--muted); font-size:.85rem; font-weight:700}
+      #widgetWatch .w-line{display:flex; justify-content:space-between; align-items:center; gap:8px; font-size:.92rem; font-weight:700}
+      #widgetWatch .w-line .muted{font-weight:500; font-size:.85rem}
+      #widgetWatch .pbar{height:11px; margin:2px 0}
+      #widgetWatch .w-next{
+        background:var(--brand-soft); color:var(--brand-dark); border-radius:11px;
+        padding:7px 11px; font-weight:800; font-size:.92rem; text-align:center;
+      }
+      #widgetWatch .w-extra{display:none}
+      /* small: one focal number + one line, nothing else */
+      html[data-hatch-size="small"] #widgetWatch{gap:4px; padding:10px 12px}
+      html[data-hatch-size="small"] #widgetWatch .w-head{font-size:.88rem}
+      html[data-hatch-size="small"] #widgetWatch .w-head .logo{width:24px; height:24px; border-radius:7px}
+      html[data-hatch-size="small"] #widgetWatch .w-date{display:none}
+      html[data-hatch-size="small"] #widgetWatch .w-glucose .v{font-size:1.9rem}
+      html[data-hatch-size="small"] #widgetWatch .w-glucose .k{font-size:.78rem}
+      html[data-hatch-size="small"] #widgetWatch .w-line{font-size:.82rem}
+      html[data-hatch-size="small"] #widgetWatch .w-next,
+      html[data-hatch-size="small"] #widgetWatch .w-extra{display:none}
+      /* medium: a wide, short glance — full summary minus the extra rows */
+      html[data-hatch-size="medium"] #widgetWatch{gap:4px; padding:8px 16px}
+      html[data-hatch-size="medium"] #widgetWatch .w-head .logo{width:26px; height:26px}
+      html[data-hatch-size="medium"] #widgetWatch .w-glucose .v{font-size:1.9rem}
+      html[data-hatch-size="medium"] #widgetWatch .w-next{padding:5px 10px; font-size:.85rem}
+      html[data-hatch-size="medium"] #widgetWatch .w-extra{display:none}
+      /* large: the full today summary */
+      html[data-hatch-size="large"] #widgetWatch{gap:10px; padding:20px}
+      html[data-hatch-size="large"] #widgetWatch .w-glucose .v{font-size:3.2rem}
+      html[data-hatch-size="large"] #widgetWatch .w-extra{display:block}
+      html[data-hatch-size="large"] #widgetWatch .w-extra .w-line{padding:7px 0; border-top:1px dashed var(--line)}
+      /* watch faces: one focal number, nothing near the edges */
+      html[data-hatch-size="watch"] #widgetWatch,
+      html[data-hatch-size="watch_round"] #widgetWatch{
+        align-items:center; text-align:center; gap:5px; padding:12px;
+      }
+      html[data-hatch-size="watch"] #widgetWatch .w-head,
+      html[data-hatch-size="watch_round"] #widgetWatch .w-head{flex-direction:column; gap:4px}
+      html[data-hatch-size="watch"] #widgetWatch .w-head .w-date,
+      html[data-hatch-size="watch_round"] #widgetWatch .w-head .w-date{margin-inline-start:0}
+      html[data-hatch-size="watch"] #widgetWatch .w-glucose,
+      html[data-hatch-size="watch_round"] #widgetWatch .w-glucose{flex-direction:column; align-items:center; gap:0}
+      html[data-hatch-size="watch"] #widgetWatch .w-glucose .v,
+      html[data-hatch-size="watch_round"] #widgetWatch .w-glucose .v{font-size:2.1rem}
+      html[data-hatch-size="watch"] #widgetWatch .w-line,
+      html[data-hatch-size="watch_round"] #widgetWatch .w-line{flex-direction:column; gap:0}
+      html[data-hatch-size="watch"] #widgetWatch .pbar,
+      html[data-hatch-size="watch_round"] #widgetWatch .pbar{width:78%}
+      html[data-hatch-size="watch"] #widgetWatch .w-next,
+      html[data-hatch-size="watch_round"] #widgetWatch .w-next,
+      html[data-hatch-size="watch"] #widgetWatch .w-extra,
+      html[data-hatch-size="watch_round"] #widgetWatch .w-extra{display:none}
+      html[data-hatch-size="watch"] #widgetWatch .w-date,
+      html[data-hatch-size="watch_round"] #widgetWatch .w-date{display:none}
+      html[data-hatch-size="watch_round"] #widgetWatch{border-radius:50%; padding:26px 30px}
+
+      /* opened directly in a watch browser: single column, big type, no chrome */
+      @media (max-width:300px){
+        body{font-size:18px}
+        .app{padding:0 10px 20px}
+        header.top .logo{display:none}
+        header.top h1{font-size:1.25rem}
+        nav.bottom{position:static; transform:none; width:100%; flex-wrap:wrap}
+        nav.bottom button{min-height:52px; font-size:.8rem}
+        .quick-grid,.tiles{grid-template-columns:1fr}
+        .card{padding:14px}
+        .big-num{font-size:2rem}
+      }
 
       /* ---------- print: only the doctor report ---------- */
       #printSheet{display:none}
@@ -273,6 +369,26 @@
 <link rel="apple-touch-icon" href="icon-192.png">
 </head>
   <body>
+    <!-- نمای ساعتی: روی اپل واچ و ساعت‌های گوگل (Wear OS) و صفحهٔ اصلی گوشی نشان داده می‌شود -->
+    <section id="widgetWatch" aria-label="سلامت‌یار روی ساعت — خلاصهٔ امروز">
+      <div class="w-head">
+        <span class="logo" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round"><path d="M12 4v16M4 12h16"/></svg></span>
+        سلامت‌یار
+        <span class="w-date" id="wDate"></span>
+      </div>
+      <div class="w-glucose">
+        <span class="v" id="wGlucose">—</span>
+        <span class="k" id="wGlucoseKind">قند امروز هنوز ثبت نشده</span>
+      </div>
+      <div class="w-line"><span>پیاده‌روی امروز</span><span class="muted" id="wWalkText">—</span></div>
+      <div class="pbar" id="wWalkBar"><div style="width:0%"></div></div>
+      <div class="w-next" id="wNextDose">دارویی برای امروز تعریف نشده است</div>
+      <div class="w-extra">
+        <div class="w-line"><span>داروهای امروز</span><span class="muted" id="wDoses">—</span></div>
+        <div class="w-line"><span>کربوهیدرات خالص امروز</span><span class="muted" id="wCarbs">—</span></div>
+      </div>
+    </section>
+
     <div class="app" id="app">
       <header class="top">
         <div class="logo" aria-hidden="true">
@@ -309,13 +425,11 @@
           <div id="todayMeals"></div>
         </div>
 
-        <footer class="note">سلامت‌یار فقط برای ثبت، یادآوری و گزارش است؛ تشخیص نمی‌دهد و درمان پیشنهاد نمی‌کند.</footer>
       </section>
 
       <!-- ============ ثبت سریع ============ -->
       <section class="view" id="view-add">
         <h2>ثبت سریع</h2>
-        <p class="sub">هر ثبت فقط چند ثانیه طول می‌کشد؛ روی یکی بزنید.</p>
         <div class="quick-grid">
           <button class="quick-btn" data-log="glucose">
             <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c3.5 4.2 6 7.6 6 10.5A6 6 0 0 1 6 13.5C6 10.6 8.5 7.2 12 3z"/></svg></span>
@@ -334,16 +448,11 @@
             ＋ پیاده‌روی
           </button>
         </div>
-        <div class="card quick-note">
-          <h3>ثبت دارو از همین‌جا</h3>
-          <p class="muted" style="margin:0">دکمهٔ «دارو خوردم» نوبت‌های امروز را نشان می‌دهد؛ کافی است روی همان نوبت بزنید تا تیک بخورد. تیک‌ها در صفحهٔ «امروز» هم هست.</p>
-        </div>
       </section>
 
       <!-- ============ دفترچه ============ -->
       <section class="view" id="view-book">
         <h2>دفترچه</h2>
-        <p class="sub">تاریخچهٔ روزبه‌روزِ همهٔ ثبت‌ها.</p>
         <div class="filters" id="bookFilters">
           <button data-f="all" class="on">همه</button>
           <button data-f="glucose">قند خون</button>
@@ -357,28 +466,22 @@
       <!-- ============ گزارش ============ -->
       <section class="view" id="view-report">
         <h2>گزارش</h2>
-        <p class="sub">خلاصهٔ تمیز برای نشان‌دادن به دکتر.</p>
         <div class="seg no-print" id="repSeg">
           <button data-r="week" class="on">هفتهٔ گذشته</button>
           <button data-r="month">ماه گذشته</button>
         </div>
         <div id="reportBody"></div>
         <div class="no-print">
-          <button class="btn" id="btnPrint">
+          <button class="btn" id="btnDownloadReport">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3h12v6"/><rect x="3" y="9" width="18" height="8" rx="2"/><path d="M6 14h12v7H6z"/></svg>
-            چاپ / ذخیره به‌صورت PDF
+            دانلود فایل گزارش (HTML)
           </button>
-          <button class="btn secondary" id="btnDownloadReport">دانلود فایل گزارش (HTML)</button>
-          <p class="hint">در پنجرهٔ چاپ، گزینهٔ «Save as PDF» را انتخاب کنید تا فایل PDF گزارش ساخته شود.</p>
         </div>
       </section>
 
       <!-- ============ تنظیمات ============ -->
       <section class="view" id="view-settings">
         <h2>تنظیمات</h2>
-        <p class="sub">داروها، هدف پیاده‌روی و سقف کربوهیدرات هر وعده.</p>
-
-        <div class="disclaimer">خط قرمز سلامت‌یار: این اپ تشخیص نمی‌دهد و درمان پیشنهاد نمی‌کند؛ فقط ثبت، یادآوری و گزارش.</div>
 
         <div class="card">
           <h3>داروهای من</h3>
@@ -390,7 +493,6 @@
             <input class="field" id="medDose" type="text" placeholder="مثلاً ۵۰۰ میلی‌گرم" autocomplete="off" />
             <label class="flabel" for="medTimes">ساعت‌های مصرف</label>
             <input class="field" id="medTimes" type="text" placeholder="مثلاً 08:00 و 20:00" autocomplete="off" dir="ltr" style="text-align:left" />
-            <p class="hint">ساعت‌ها را با قالب ۲۴ ساعته بنویسید و با «و» یا ویرگول جدا کنید.</p>
             <button class="btn" type="submit" style="margin-top:12px">افزودن دارو</button>
           </form>
         </div>
@@ -402,34 +504,16 @@
             <input class="field" id="goalWalk" type="number" inputmode="decimal" step="0.1" min="0" />
             <label class="flabel" for="goalCarb">سقف کربوهیدرات خالص هر وعده (گرم)</label>
             <input class="field" id="goalCarb" type="number" inputmode="numeric" step="1" min="0" />
-            <p class="hint">این سقف را خودتان تعیین می‌کنید؛ هر وعده‌ای که از آن بگذرد، در اپ هشدار می‌گیرد.</p>
             <button class="btn" type="submit" style="margin-top:12px">ذخیرهٔ هدف‌ها</button>
           </form>
         </div>
 
         <div class="card">
-          <h3>تست یک روز کامل</h3>
-          <p class="muted" style="margin-top:0">برای آزمودن اپ، یک روز نمونه ثبت می‌شود: یک قند ناشتا، یک نوبت دارو، یک وعدهٔ ناهار و یک پیاده‌روی. هر وقت خواستید از دفترچه حذفشان کنید.</p>
-          <button class="btn secondary" id="btnTestDay" type="button">ثبت روز آزمایشی</button>
-        </div>
-
-        <div class="card">
           <h3>داده‌های من</h3>
-          <p class="muted" style="margin-top:0">همهٔ اطلاعات فقط روی همین گوشی و در همین مرورگر می‌ماند؛ هیچ سروری در کار نیست و چیزی جایی فرستاده نمی‌شود. برای اطمینان، هر از گاهی یک نسخهٔ پشتیبان بگیرید.</p>
           <button class="btn secondary" id="btnExport" type="button">دانلود نسخهٔ پشتیبان (JSON)</button>
           <label class="btn secondary" for="importFile" style="margin-top:10px">بازیابی از نسخهٔ پشتیبان</label>
           <input id="importFile" type="file" accept="application/json" hidden />
           <button class="btn danger" id="btnClear" type="button" style="margin-top:10px">حذف همهٔ داده‌ها</button>
-        </div>
-
-        <div class="card">
-          <h3>انتشار در GitHub و نصب روی گوشی</h3>
-          <ol class="steps">
-            <li>در GitHub یک مخزن (Repository) تازه بسازید و این فایل را با نام <b>index.html</b> در آن آپلود کنید.</li>
-            <li>از Settings مخزن، بخش Pages را باز کنید و منبع را روی شاخهٔ اصلی (main) بگذارید؛ چند دقیقه بعد لینک زنده آماده است.</li>
-            <li>لینک را روی گوشی باز کنید؛ در آیفون: دکمهٔ اشتراک‌گذاری ← «Add to Home Screen». در اندروید: منوی مرورگر ← «نصب برنامه / Add to Home screen».</li>
-            <li>از این به بعد سلامت‌یار مثل یک اپ واقعی از صفحهٔ اصلی گوشی باز می‌شود.</li>
-          </ol>
         </div>
       </section>
 
@@ -541,12 +625,12 @@
 
       /* ---------- icons ---------- */
       var IC = {
-        glucose:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c3.5 4.2 6 7.6 6 10.5A6 6 0 0 1 6 13.5C6 10.6 8.5 7.2 12 3z"/></svg>',
-        med:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="8.5" width="17" height="7" rx="3.5" transform="rotate(-45 12 12)"/><path d="M9 9l6 6"/></svg>',
-        meal:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 3v7a2 2 0 0 0 2 2h0a2 2 0 0 0 2-2V3"/><path d="M6 3v18"/><path d="M18 3c-2 0-3 2.5-3 5v4h3v9"/><path d="M18 3v9"/></svg>',
-        walk:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13" cy="4.5" r="1.8"/><path d="M13 8l-2.5 5L13 16l1 5"/><path d="M10.5 13L7 15l-1 4"/><path d="M13 16l2.5 2 1 3.5"/></svg>',
-        check:'<svg viewBox="0 0 24 24" fill="none" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12.5l5 5 10-11"/></svg>',
-        bell:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 9a6 6 0 1 0-12 0c0 6-2.5 7-2.5 7h17S18 15 18 9z"/><path d="M10 20a2.2 2.2 0 0 0 4 0"/></svg>'
+        glucose:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c3.5 4.2 6 7.6 6 10.5A6 6 0 0 1 6 13.5C6 10.6 8.5 7.2 12 3z"/><\/svg>',
+        med:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="8.5" width="17" height="7" rx="3.5" transform="rotate(-45 12 12)"/><path d="M9 9l6 6"/><\/svg>',
+        meal:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 3v7a2 2 0 0 0 2 2h0a2 2 0 0 0 2-2V3"/><path d="M6 3v18"/><path d="M18 3c-2 0-3 2.5-3 5v4h3v9"/><path d="M18 3v9"/><\/svg>',
+        walk:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13" cy="4.5" r="1.8"/><path d="M13 8l-2.5 5L13 16l1 5"/><path d="M10.5 13L7 15l-1 4"/><path d="M13 16l2.5 2 1 3.5"/><\/svg>',
+        check:'<svg viewBox="0 0 24 24" fill="none" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12.5l5 5 10-11"/><\/svg>',
+        bell:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 9a6 6 0 1 0-12 0c0 6-2.5 7-2.5 7h17S18 15 18 9z"/><path d="M10 20a2.2 2.2 0 0 0 4 0"/><\/svg>'
       };
 
       /* ---------- doses ---------- */
@@ -572,10 +656,10 @@
         var pastDue = showPastDue && !d.taken && d.ts < now && dayKey(d.ts) === dayKey(now);
         return '<button class="dose' + (d.taken ? " taken" : "") + (pastDue ? " past-due" : "") +
           '" data-dose="' + esc(d.key) + '">' +
-          '<span class="box">' + IC.check + '</span>' +
-          '<span class="dose-name">' + esc(d.med.name) + (d.med.dose ? ' <span class="muted">' + esc(d.med.dose) + '</span>' : '') + '</span>' +
-          (pastDue ? '<span class="chip warn">گذشته</span>' : '') +
-          '<span class="dose-time">' + faNum(d.time) + '</span></button>';
+          '<span class="box">' + IC.check + '<\/span>' +
+          '<span class="dose-name">' + esc(d.med.name) + (d.med.dose ? ' <span class="muted">' + esc(d.med.dose) + '<\/span>' : '') + '<\/span>' +
+          (pastDue ? '<span class="chip warn">گذشته<\/span>' : '') +
+          '<span class="dose-time">' + faNum(d.time) + '<\/span><\/button>';
       }
 
       /* ---------- today ---------- */
@@ -591,41 +675,41 @@
         $("reminderBox").innerHTML = overdue.length ?
           '<div class="reminder">' + IC.bell + '<span>یادآوری: نوبت ' +
           overdue.map(function(d){ return esc(d.med.name) + " ساعت " + faNum(d.time); }).join(" و ") +
-          ' هنوز تیک نخورده است.</span></div>' : "";
+          ' هنوز تیک نخورده است.<\/span><\/div>' : "";
 
         /* glucose */
         var g = db.glucose.filter(inToday).sort(function(a,b){ return b.ts - a.ts; });
         if(!g.length){
-          $("todayGlucose").innerHTML = '<p class="muted" style="margin:0">هنوز قندی برای امروز ثبت نشده است. از «ثبت سریع» اولین قند را ثبت کنید.</p>';
+          $("todayGlucose").innerHTML = '<p class="muted" style="margin:0">هنوز قندی برای امروز ثبت نشده است. از «ثبت سریع» اولین قند را ثبت کنید.<\/p>';
         } else {
           var last = g[0];
           var html = '<div class="big-num">' + faNum(last.value) + ' <span class="unit">میلی‌گرم بر دسی‌لیتر — ' +
-            (last.type === "fasting" ? "ناشتا" : "بعد از غذا") + '، ساعت ' + faTime(last.ts) + '</span></div>';
+            (last.type === "fasting" ? "ناشتا" : "بعد از غذا") + '، ساعت ' + faTime(last.ts) + '<\/span><\/div>';
           g.slice(1).forEach(function(e){
-            html += '<div class="rowline"><span>' + (e.type === "fasting" ? "ناشتا" : "بعد از غذا") + '</span><b>' +
-              faNum(e.value) + '</b><span class="muted">' + faTime(e.ts) + '</span></div>';
+            html += '<div class="rowline"><span>' + (e.type === "fasting" ? "ناشتا" : "بعد از غذا") + '<\/span><b>' +
+              faNum(e.value) + '<\/b><span class="muted">' + faTime(e.ts) + '<\/span><\/div>';
           });
           $("todayGlucose").innerHTML = html;
         }
 
         /* next dose + checklist */
         if(!db.meds.length){
-          $("nextDose").innerHTML = '<p class="muted" style="margin:0 0 6px">هنوز دارویی تعریف نشده است؛ از صفحهٔ «تنظیمات» داروهایتان را اضافه کنید.</p>';
+          $("nextDose").innerHTML = '<p class="muted" style="margin:0 0 6px">هنوز دارویی تعریف نشده است؛ از صفحهٔ «تنظیمات» داروهایتان را اضافه کنید.<\/p>';
           $("todayDoses").innerHTML = "";
         } else {
           var now = Date.now();
           var upcoming = doses.filter(function(d){ return !d.taken && d.ts >= now; });
           var next = upcoming[0];
           if(next){
-            $("nextDose").innerHTML = '<div class="rowline"><span class="muted">داروی بعدی</span><b>' +
-              esc(next.med.name) + (next.med.dose ? " " + esc(next.med.dose) : "") + '</b><span class="chip">ساعت ' + faNum(next.time) + '</span></div>';
+            $("nextDose").innerHTML = '<div class="rowline"><span class="muted">داروی بعدی<\/span><b>' +
+              esc(next.med.name) + (next.med.dose ? " " + esc(next.med.dose) : "") + '<\/b><span class="chip">ساعت ' + faNum(next.time) + '<\/span><\/div>';
           } else {
             var tom = dosesForDay(now + 86400000)[0];
-            $("nextDose").innerHTML = '<div class="rowline"><span class="muted">داروی بعدی</span><b>' +
-              (tom ? esc(tom.med.name) + '</b><span class="chip">فردا ساعت ' + faNum(tom.time) + '</span>'
-                   : '—</b>') + '</div>';
+            $("nextDose").innerHTML = '<div class="rowline"><span class="muted">داروی بعدی<\/span><b>' +
+              (tom ? esc(tom.med.name) + '<\/b><span class="chip">فردا ساعت ' + faNum(tom.time) + '<\/span>'
+                   : '—<\/b>') + '<\/div>';
           }
-          $("todayDoses").innerHTML = '<p class="muted" style="margin:12px 0 8px">نوبت‌های امروز — هرکدام را که خوردید، تیک بزنید:</p>' +
+          $("todayDoses").innerHTML = '<p class="muted" style="margin:12px 0 8px">نوبت‌های امروز — هرکدام را که خوردید، تیک بزنید:<\/p>' +
             doses.map(function(d){ return doseRow(d, true); }).join("");
         }
 
@@ -635,22 +719,22 @@
         var pct = goal > 0 ? Math.min(100, Math.round(km / goal * 100)) : 0;
         var kmText = km === 0 ? "صفر" : faNum(km.toFixed(1).replace(/\.0$/,""));
         $("todayWalk").innerHTML =
-          '<div class="big-num"><span class="num">' + kmText + '</span> <span class="unit">کیلومتر از هدف ' + faNum(goal) + ' کیلومتر</span></div>' +
-          '<div class="pbar' + (pct >= 100 ? " done" : "") + '"><div style="width:' + pct + '%"></div></div>' +
-          '<span class="muted">' + (pct >= 100 ? "به هدف امروز رسیدید." : faNum(pct) + "٪ از هدف امروز") + '</span>';
+          '<div class="big-num"><span class="num">' + kmText + '<\/span> <span class="unit">کیلومتر از هدف ' + faNum(goal) + ' کیلومتر<\/span><\/div>' +
+          '<div class="pbar' + (pct >= 100 ? " done" : "") + '"><div style="width:' + pct + '%"><\/div><\/div>' +
+          '<span class="muted">' + (pct >= 100 ? "به هدف امروز رسیدید." : faNum(pct) + "٪ از هدف امروز") + '<\/span>';
 
         /* meals */
         var meals = db.meals.filter(inToday).sort(function(a,b){ return b.ts - a.ts; });
         var limit = +db.settings.carbLimit || 0;
         if(!meals.length){
-          $("todayMeals").innerHTML = '<p class="muted" style="margin:0">هنوز وعده‌ای برای امروز ثبت نشده است.</p>';
+          $("todayMeals").innerHTML = '<p class="muted" style="margin:0">هنوز وعده‌ای برای امروز ثبت نشده است.<\/p>';
         } else {
           var total = meals.reduce(function(s,e){ return s + (+e.net || 0); }, 0);
-          var html = '<div class="big-num">' + faNum(total) + ' <span class="unit">گرم کربوهیدرات خالص در مجموع امروز</span></div>';
+          var html = '<div class="big-num">' + faNum(total) + ' <span class="unit">گرم کربوهیدرات خالص در مجموع امروز<\/span><\/div>';
           meals.forEach(function(e){
             var over = limit > 0 && e.net > limit;
-            html += '<div class="rowline"><span>' + esc(e.name) + '</span><b>' + faNum(e.net) + ' گرم</b>' +
-              (over ? '<span class="chip over">بالای سقف وعده</span>' : '<span class="muted">' + faTime(e.ts) + '</span>') + '</div>';
+            html += '<div class="rowline"><span>' + esc(e.name) + '<\/span><b>' + faNum(e.net) + ' گرم<\/b>' +
+              (over ? '<span class="chip over">بالای سقف وعده<\/span>' : '<span class="muted">' + faTime(e.ts) + '<\/span>') + '<\/div>';
           });
           $("todayMeals").innerHTML = html;
         }
@@ -671,7 +755,7 @@
           out.push({ kind:"meal", ts:e.ts, id:e.id, icon:IC.meal,
             t: esc(e.name),
             d:"کربوهیدرات خالص " + faNum(e.net) + " گرم" + (e.total ? " (کل " + faNum(e.total) + "، فیبر " + faNum(e.fiber || 0) + ")" : "") +
-              " · ساعت " + faTime(e.ts) + (over ? ' · <span style="color:var(--red);font-weight:700">بالای سقف وعده</span>' : "") });
+              " · ساعت " + faTime(e.ts) + (over ? ' · <span style="color:var(--red);font-weight:700">بالای سقف وعده<\/span>' : "") });
         });
         db.walks.forEach(function(e){
           out.push({ kind:"walk", ts:e.ts, id:e.id, icon:IC.walk,
@@ -691,7 +775,7 @@
       function renderBook(){
         var list = allEntries().filter(function(e){ return bookFilter === "all" || e.kind === bookFilter; });
         if(!list.length){
-          $("bookList").innerHTML = '<div class="empty">هنوز چیزی این‌جا ثبت نشده است.<br/>از صفحهٔ «ثبت سریع» شروع کنید.</div>';
+          $("bookList").innerHTML = '<div class="empty">هنوز چیزی این‌جا ثبت نشده است.<br/>از صفحهٔ «ثبت سریع» شروع کنید.<\/div>';
           return;
         }
         var html = "", lastDay = "";
@@ -700,13 +784,13 @@
           if(dk !== lastDay){
             lastDay = dk;
             html += '<div class="day-title">' + dayLabel(e.ts) + '<span>' +
-              new Intl.DateTimeFormat("fa-IR", { day:"numeric", month:"numeric", year:"numeric" }).format(new Date(e.ts)) + '</span></div>';
+              new Intl.DateTimeFormat("fa-IR", { day:"numeric", month:"numeric", year:"numeric" }).format(new Date(e.ts)) + '<\/span><\/div>';
           }
           var del = e.kind === "med"
-            ? '<button class="del" data-untick="' + esc(e.doseKey) + '">برداشتن تیک</button>'
-            : '<button class="del" data-del="' + e.kind + ':' + e.id + '">حذف</button>';
-          html += '<div class="entry"><span class="ic">' + e.icon + '</span><div class="main"><div class="t">' +
-            e.t + '</div><div class="d">' + e.d + '</div></div>' + del + '</div>';
+            ? '<button class="del" data-untick="' + esc(e.doseKey) + '">برداشتن تیک<\/button>'
+            : '<button class="del" data-del="' + e.kind + ':' + e.id + '">حذف<\/button>';
+          html += '<div class="entry"><span class="ic">' + e.icon + '<\/span><div class="main"><div class="t">' +
+            e.t + '<\/div><div class="d">' + e.d + '<\/div><\/div>' + del + '<\/div>';
         });
         $("bookList").innerHTML = html;
       }
@@ -747,19 +831,19 @@
           var x = 12 + i * bw + 3, w = bw - 6;
           if(v > 0){
             s += '<rect x="' + x + '" y="' + (base - h) + '" width="' + w + '" height="' + h + '" rx="4" fill="var(--brand)"/>';
-            s += '<text x="' + (x + w/2) + '" y="' + (base - h - 6) + '" text-anchor="middle" font-size="13" font-weight="700" fill="var(--ink)">' + faNum(Math.round(v * 10) / 10) + '</text>';
+            s += '<text x="' + (x + w/2) + '" y="' + (base - h - 6) + '" text-anchor="middle" font-size="13" font-weight="700" fill="var(--ink)">' + faNum(Math.round(v * 10) / 10) + '<\/text>';
           }
           var wd = new Intl.DateTimeFormat("fa-IR", { weekday:"narrow" }).format(new Date(d.ts));
-          s += '<text x="' + (x + w/2) + '" y="' + (base + 22) + '" text-anchor="middle" font-size="12.5" fill="var(--muted)">' + wd + '</text>';
+          s += '<text x="' + (x + w/2) + '" y="' + (base + 22) + '" text-anchor="middle" font-size="12.5" fill="var(--muted)">' + wd + '<\/text>';
         });
-        return s + '</svg><p class="hint" style="margin:2px 0 0">واحد: ' + unit + '</p>';
+        return s + '<\/svg><p class="hint" style="margin:2px 0 0">واحد: ' + unit + '<\/p>';
       }
       function renderReport(){
         var days = collectStats();
         var hasData = days.some(function(d){ return d.fasting !== null || d.after !== null || d.km > 0 || d.net > 0 || d.taken > 0; });
         var periodName = repRange === "week" ? "هفتهٔ گذشته" : "ماه گذشته";
         if(!hasData){
-          $("reportBody").innerHTML = '<div class="empty">برای این بازه هنوز ثبتی نیست.<br/>چند روز که ثبت کنید، گزارش همین‌جا ساخته می‌شود.</div>';
+          $("reportBody").innerHTML = '<div class="empty">برای این بازه هنوز ثبتی نیست.<br/>چند روز که ثبت کنید، گزارش همین‌جا ساخته می‌شود.<\/div>';
           $("printSheet").innerHTML = "";
           return;
         }
@@ -775,40 +859,40 @@
         var adh = sched > 0 ? Math.round(taken / sched * 100) : null;
 
         var tiles =
-          '<div class="tile"><div class="v">' + faNum(mean(fVals)) + '</div><div class="k">میانگین قند ناشتا (میلی‌گرم)</div></div>' +
-          '<div class="tile"><div class="v">' + faNum(mean(aVals)) + '</div><div class="k">میانگین قند بعد از غذا (میلی‌گرم)</div></div>' +
-          '<div class="tile"><div class="v">' + faNum(Math.round(totalKm * 10) / 10) + ' <span class="unit">کم</span></div><div class="k">مجموع پیاده‌روی — ' + faNum(goalDays) + ' روز در هدف</div></div>' +
-          '<div class="tile"><div class="v">' + (adh === null ? "—" : faNum(adh) + "٪") + '</div><div class="k">داروهای خورده‌شده از نوبت‌ها (' + faNum(taken) + ' از ' + faNum(sched) + ')</div></div>';
+          '<div class="tile"><div class="v">' + faNum(mean(fVals)) + '<\/div><div class="k">میانگین قند ناشتا (میلی‌گرم)<\/div><\/div>' +
+          '<div class="tile"><div class="v">' + faNum(mean(aVals)) + '<\/div><div class="k">میانگین قند بعد از غذا (میلی‌گرم)<\/div><\/div>' +
+          '<div class="tile"><div class="v">' + faNum(Math.round(totalKm * 10) / 10) + ' <span class="unit">کم<\/span><\/div><div class="k">مجموع پیاده‌روی — ' + faNum(goalDays) + ' روز در هدف<\/div><\/div>' +
+          '<div class="tile"><div class="v">' + (adh === null ? "—" : faNum(adh) + "٪") + '<\/div><div class="k">داروهای خورده‌شده از نوبت‌ها (' + faNum(taken) + ' از ' + faNum(sched) + ')<\/div><\/div>';
 
         var rows = days.slice().reverse().map(function(d){
-          return '<tr><td>' + new Intl.DateTimeFormat("fa-IR", { weekday:"short", day:"numeric", month:"numeric" }).format(new Date(d.ts)) + '</td>' +
-            '<td>' + faNum(d.fasting) + '</td><td>' + faNum(d.after) + '</td>' +
-            '<td>' + faNum(Math.round(d.km * 10) / 10) + '</td><td>' + faNum(d.net) + '</td>' +
-            '<td>' + (d.scheduled ? faNum(d.taken) + ' از ' + faNum(d.scheduled) : "—") + '</td></tr>';
+          return '<tr><td>' + new Intl.DateTimeFormat("fa-IR", { weekday:"short", day:"numeric", month:"numeric" }).format(new Date(d.ts)) + '<\/td>' +
+            '<td>' + faNum(d.fasting) + '<\/td><td>' + faNum(d.after) + '<\/td>' +
+            '<td>' + faNum(Math.round(d.km * 10) / 10) + '<\/td><td>' + faNum(d.net) + '<\/td>' +
+            '<td>' + (d.scheduled ? faNum(d.taken) + ' از ' + faNum(d.scheduled) : "—") + '<\/td><\/tr>';
         }).join("");
-        var table = '<div class="tablewrap"><table class="rep"><thead><tr><th>روز</th><th>قند ناشتا</th><th>قند بعد از غذا</th><th>پیاده‌روی (کم)</th><th>کرب خالص (گرم)</th><th>دارو</th></tr></thead><tbody>' + rows + '</tbody></table></div>';
+        var table = '<div class="tablewrap"><table class="rep"><thead><tr><th>روز<\/th><th>قند ناشتا<\/th><th>قند بعد از غذا<\/th><th>پیاده‌روی (کم)<\/th><th>کرب خالص (گرم)<\/th><th>دارو<\/th><\/tr><\/thead><tbody>' + rows + '<\/tbody><\/table><\/div>';
 
         var maxKm = Math.max.apply(null, days.map(function(d){ return d.km; }).concat([goal, 1]));
-        var charts = '<div class="chart-box"><h3>پیاده‌روی روزانه (کیلومتر)</h3>' + barChart(days, function(d){ return d.km; }, maxKm, "کیلومتر") + '</div>';
+        var charts = '<div class="chart-box"><h3>پیاده‌روی روزانه (کیلومتر)<\/h3>' + barChart(days, function(d){ return d.km; }, maxKm, "کیلومتر") + '<\/div>';
 
         $("reportBody").innerHTML =
-          '<div class="tiles">' + tiles + '</div>' + charts +
-          '<div class="card"><h3>جزئیات روزبه‌روز — ' + periodName + '</h3>' + table +
-          (overMeals ? '<p style="margin:12px 0 0"><span class="chip over">' + faNum(overMeals) + ' وعده بالای سقف کربوهیدرات</span></p>' : '') + '</div>';
+          '<div class="tiles">' + tiles + '<\/div>' + charts +
+          '<div class="card"><h3>جزئیات روزبه‌روز — ' + periodName + '<\/h3>' + table +
+          (overMeals ? '<p style="margin:12px 0 0"><span class="chip over">' + faNum(overMeals) + ' وعده بالای سقف کربوهیدرات<\/span><\/p>' : '') + '<\/div>';
 
         /* print sheet for the doctor */
         var gen = new Intl.DateTimeFormat("fa-IR", { day:"numeric", month:"long", year:"numeric" }).format(new Date());
         $("printSheet").innerHTML =
-          '<h1>گزارش سلامت‌یار — ' + periodName + '</h1>' +
-          '<p class="meta">تاریخ تهیه: ' + gen + ' · این گزارش فقط خلاصهٔ ثبت‌های شخصی کاربر است.</p>' +
-          '<table><tr><th>شاخص</th><th>مقدار</th></tr>' +
-          '<tr><td>میانگین قند ناشتا</td><td>' + faNum(mean(fVals)) + ' میلی‌گرم بر دسی‌لیتر</td></tr>' +
-          '<tr><td>میانگین قند بعد از غذا</td><td>' + faNum(mean(aVals)) + ' میلی‌گرم بر دسی‌لیتر</td></tr>' +
-          '<tr><td>مجموع پیاده‌روی</td><td>' + faNum(Math.round(totalKm * 10) / 10) + ' کیلومتر (' + faNum(goalDays) + ' روز در هدف ' + faNum(goal) + ' کیلومتری)</td></tr>' +
-          '<tr><td>مصرف دارو</td><td>' + (adh === null ? "—" : faNum(taken) + ' از ' + faNum(sched) + ' نوبت (' + faNum(adh) + '٪)') + '</td></tr>' +
-          '<tr><td>وعده‌های بالای سقف کربوهیدرات (' + faNum(db.settings.carbLimit) + ' گرم)</td><td>' + faNum(overMeals) + ' وعده</td></tr></table>' +
-          '<h2>جزئیات روزبه‌روز</h2>' + table +
-          '<p class="foot">سلامت‌یار ابزار ثبت و یادآوری است و جنبهٔ تشخیصی یا درمانی ندارد؛ اعداد بالا عیناً از ثبت‌های کاربر گرفته شده‌اند.</p>';
+          '<h1>گزارش سلامت‌یار — ' + periodName + '<\/h1>' +
+          '<p class="meta">تاریخ تهیه: ' + gen + ' · این گزارش فقط خلاصهٔ ثبت‌های شخصی کاربر است.<\/p>' +
+          '<table><tr><th>شاخص<\/th><th>مقدار<\/th><\/tr>' +
+          '<tr><td>میانگین قند ناشتا<\/td><td>' + faNum(mean(fVals)) + ' میلی‌گرم بر دسی‌لیتر<\/td><\/tr>' +
+          '<tr><td>میانگین قند بعد از غذا<\/td><td>' + faNum(mean(aVals)) + ' میلی‌گرم بر دسی‌لیتر<\/td><\/tr>' +
+          '<tr><td>مجموع پیاده‌روی<\/td><td>' + faNum(Math.round(totalKm * 10) / 10) + ' کیلومتر (' + faNum(goalDays) + ' روز در هدف ' + faNum(goal) + ' کیلومتری)<\/td><\/tr>' +
+          '<tr><td>مصرف دارو<\/td><td>' + (adh === null ? "—" : faNum(taken) + ' از ' + faNum(sched) + ' نوبت (' + faNum(adh) + '٪)') + '<\/td><\/tr>' +
+          '<tr><td>وعده‌های بالای سقف کربوهیدرات (' + faNum(db.settings.carbLimit) + ' گرم)<\/td><td>' + faNum(overMeals) + ' وعده<\/td><\/tr><\/table>' +
+          '<h2>جزئیات روزبه‌روز<\/h2>' + table +
+          '<p class="foot">سلامت‌یار ابزار ثبت و یادآوری است و جنبهٔ تشخیصی یا درمانی ندارد؛ اعداد بالا عیناً از ثبت‌های کاربر گرفته شده‌اند.<\/p>';
       }
 
       /* ---------- settings ---------- */
@@ -816,18 +900,61 @@
         $("goalWalk").value = db.settings.walkGoalKm;
         $("goalCarb").value = db.settings.carbLimit;
         if(!db.meds.length){
-          $("medList").innerHTML = '<p class="muted">هنوز دارویی اضافه نشده است؛ فرم زیر را پر کنید.</p>';
+          $("medList").innerHTML = '<p class="muted">هنوز دارویی اضافه نشده است؛ فرم زیر را پر کنید.<\/p>';
         } else {
           $("medList").innerHTML = db.meds.map(function(m){
-            return '<div class="med-item"><div class="info"><b>' + esc(m.name) + '</b>' +
-              (m.dose ? ' <span class="muted">' + esc(m.dose) + '</span>' : '') +
-              '<div class="muted">ساعت‌ها: ' + (m.times || []).map(faNum).join(" و ") + '</div></div>' +
-              '<button class="del" data-delmed="' + m.id + '" style="background:none;border:none;color:var(--red);font-weight:700;min-height:44px;padding:8px 10px">حذف</button></div>';
+            return '<div class="med-item"><div class="info"><b>' + esc(m.name) + '<\/b>' +
+              (m.dose ? ' <span class="muted">' + esc(m.dose) + '<\/span>' : '') +
+              '<div class="muted">ساعت‌ها: ' + (m.times || []).map(faNum).join(" و ") + '<\/div><\/div>' +
+              '<button class="del" data-delmed="' + m.id + '" style="background:none;border:none;color:var(--red);font-weight:700;min-height:44px;padding:8px 10px">حذف<\/button><\/div>';
           }).join("");
         }
       }
 
-      function renderAll(){ renderToday(); renderBook(); renderReport(); renderSettings(); }
+      /* ---------- watch / widget (Apple Watch & Wear OS) ---------- */
+      function renderWidget(){
+        var start = todayStart(), end = start + 86400000;
+        var inToday = function(e){ return e.ts >= start && e.ts < end; };
+        $("wDate").textContent = new Intl.DateTimeFormat("fa-IR", { weekday:"long", day:"numeric", month:"long" }).format(new Date());
+
+        var g = db.glucose.filter(inToday).sort(function(a,b){ return b.ts - a.ts; });
+        if(g.length){
+          $("wGlucose").textContent = faNum(g[0].value);
+          $("wGlucoseKind").textContent = "آخرین قند — " + (g[0].type === "fasting" ? "ناشتا" : "بعد از غذا") + "، ساعت " + faTime(g[0].ts);
+        } else {
+          $("wGlucose").textContent = "—";
+          $("wGlucoseKind").textContent = "قند امروز هنوز ثبت نشده";
+        }
+
+        var km = db.walks.filter(inToday).reduce(function(s,e){ return s + (+e.km || 0); }, 0);
+        var goal = +db.settings.walkGoalKm || 0;
+        var pct = goal > 0 ? Math.min(100, Math.round(km / goal * 100)) : 0;
+        $("wWalkText").textContent = faNum(km === 0 ? 0 : Math.round(km * 10) / 10) + " از " + faNum(goal) + " کیلومتر";
+        var bar = $("wWalkBar");
+        bar.classList.toggle("done", pct >= 100);
+        bar.firstElementChild.style.width = pct + "%";
+
+        var doses = dosesForDay(Date.now());
+        var taken = doses.filter(function(d){ return d.taken; }).length;
+        $("wDoses").textContent = doses.length ? faNum(taken) + " از " + faNum(doses.length) + " نوبت خورده شده" : "—";
+        var now = Date.now();
+        var next = doses.filter(function(d){ return !d.taken && d.ts >= now; })[0];
+        var overdueW = doses.filter(function(d){ return !d.taken && d.ts < now; })[0];
+        if(overdueW){
+          $("wNextDose").textContent = "یادآوری: " + overdueW.med.name + " ساعت " + faNum(overdueW.time) + " هنوز خورده نشده";
+        } else if(next){
+          $("wNextDose").textContent = "داروی بعدی: " + next.med.name + " — ساعت " + faNum(next.time);
+        } else if(doses.length){
+          $("wNextDose").textContent = "همهٔ داروهای امروز خورده شد";
+        } else {
+          $("wNextDose").textContent = "دارویی برای امروز تعریف نشده است";
+        }
+
+        var net = db.meals.filter(inToday).reduce(function(s,e){ return s + (+e.net || 0); }, 0);
+        $("wCarbs").textContent = faNum(net) + " گرم";
+      }
+
+      function renderAll(){ renderToday(); renderBook(); renderReport(); renderSettings(); renderWidget(); }
 
       /* ---------- navigation ---------- */
       $("bottomNav").addEventListener("click", function(e){
@@ -846,22 +973,22 @@
       overlay.addEventListener("click", function(e){ if(e.target === overlay) closeSheet(); });
 
       function dateTimeFields(){
-        return '<label class="flabel">تاریخ</label><input class="field" type="date" id="fDate" value="' + todayDateValue() + '">' +
-               '<label class="flabel">ساعت</label><input class="field" type="time" id="fTime" value="' + nowTimeValue() + '">';
+        return '<label class="flabel">تاریخ<\/label><input class="field" type="date" id="fDate" value="' + todayDateValue() + '">' +
+               '<label class="flabel">ساعت<\/label><input class="field" type="time" id="fTime" value="' + nowTimeValue() + '">';
       }
       function sheetTs(){ return tsFromDateTime($("fDate").value, $("fTime").value); }
 
       function openGlucose(){
         openSheet(
-          '<h3>ثبت قند خون</h3><p class="sub">مقدار را از روی دستگاه قندتان بنویسید.</p>' +
-          '<label class="flabel">قند خون (میلی‌گرم بر دسی‌لیتر)</label>' +
+          '<h3>ثبت قند خون<\/h3><p class="sub">مقدار را از روی دستگاه قندتان بنویسید.<\/p>' +
+          '<label class="flabel">قند خون (میلی‌گرم بر دسی‌لیتر)<\/label>' +
           '<input class="field" id="fVal" type="number" inputmode="numeric" min="20" max="600" placeholder="مثلاً ۱۱۸" style="font-size:1.3rem;font-weight:800">' +
-          '<label class="flabel">نوع اندازه‌گیری</label>' +
-          '<div class="seg" id="fTypeSeg"><button type="button" data-t="fasting" class="on">ناشتا</button><button type="button" data-t="after">بعد از غذا</button></div>' +
+          '<label class="flabel">نوع اندازه‌گیری<\/label>' +
+          '<div class="seg" id="fTypeSeg"><button type="button" data-t="fasting" class="on">ناشتا<\/button><button type="button" data-t="after">بعد از غذا<\/button><\/div>' +
           dateTimeFields() +
-          '<label class="flabel">یادداشت (اختیاری)</label><input class="field" id="fNote" type="text" placeholder="مثلاً قبل از صبحانه">' +
-          '<button class="btn" id="fSave" style="margin-top:18px">ثبت قند</button>' +
-          '<button class="btn secondary" id="fCancel">انصراف</button>');
+          '<label class="flabel">یادداشت (اختیاری)<\/label><input class="field" id="fNote" type="text" placeholder="مثلاً قبل از صبحانه">' +
+          '<button class="btn" id="fSave" style="margin-top:18px">ثبت قند<\/button>' +
+          '<button class="btn secondary" id="fCancel">انصراف<\/button>');
         var type = "fasting";
         $("fTypeSeg").addEventListener("click", function(e){
           var b = e.target.closest("button"); if(!b) return;
@@ -880,15 +1007,15 @@
 
       function openMeal(){
         openSheet(
-          '<h3>ثبت وعدهٔ غذا</h3><p class="sub">کربوهیدرات خالص = کربوهیدرات کل منهای فیبر؛ خودش حساب می‌شود.</p>' +
-          '<label class="flabel">نام غذا / وعده</label><input class="field" id="fName" type="text" placeholder="مثلاً ناهار: برنج و مرغ">' +
-          '<label class="flabel">کربوهیدرات کل (گرم)</label><input class="field" id="fTotal" type="number" inputmode="numeric" min="0" placeholder="۰">' +
-          '<label class="flabel">فیبر (گرم)</label><input class="field" id="fFiber" type="number" inputmode="numeric" min="0" value="0">' +
-          '<div class="net-out" id="netOut"><span>کربوهیدرات خالص</span><span class="v" id="netVal">۰ گرم</span></div>' +
-          '<p class="hint" id="netWarn"></p>' +
+          '<h3>ثبت وعدهٔ غذا<\/h3><p class="sub">کربوهیدرات خالص = کربوهیدرات کل منهای فیبر؛ خودش حساب می‌شود.<\/p>' +
+          '<label class="flabel">نام غذا / وعده<\/label><input class="field" id="fName" type="text" placeholder="مثلاً ناهار: برنج و مرغ">' +
+          '<label class="flabel">کربوهیدرات کل (گرم)<\/label><input class="field" id="fTotal" type="number" inputmode="numeric" min="0" placeholder="۰">' +
+          '<label class="flabel">فیبر (گرم)<\/label><input class="field" id="fFiber" type="number" inputmode="numeric" min="0" value="0">' +
+          '<div class="net-out" id="netOut"><span>کربوهیدرات خالص<\/span><span class="v" id="netVal">۰ گرم<\/span><\/div>' +
+          '<p class="hint" id="netWarn"><\/p>' +
           dateTimeFields() +
-          '<button class="btn" id="fSave" style="margin-top:14px">ثبت وعده</button>' +
-          '<button class="btn secondary" id="fCancel">انصراف</button>');
+          '<button class="btn" id="fSave" style="margin-top:14px">ثبت وعده<\/button>' +
+          '<button class="btn secondary" id="fCancel">انصراف<\/button>');
         function upd(){
           var total = parseFloat(toLatin($("fTotal").value)) || 0;
           var fiber = parseFloat(toLatin($("fFiber").value)) || 0;
@@ -918,12 +1045,12 @@
 
       function openWalk(){
         openSheet(
-          '<h3>ثبت پیاده‌روی</h3><p class="sub">مسافت را به کیلومتر بنویسید؛ قدم‌ها اختیاری است.</p>' +
-          '<label class="flabel">مسافت (کیلومتر)</label><input class="field" id="fKm" type="number" inputmode="decimal" step="0.1" min="0" placeholder="مثلاً ۳٫۲" style="font-size:1.3rem;font-weight:800">' +
-          '<label class="flabel">تعداد قدم (اختیاری)</label><input class="field" id="fSteps" type="number" inputmode="numeric" min="0" placeholder="۰">' +
+          '<h3>ثبت پیاده‌روی<\/h3><p class="sub">مسافت را به کیلومتر بنویسید؛ قدم‌ها اختیاری است.<\/p>' +
+          '<label class="flabel">مسافت (کیلومتر)<\/label><input class="field" id="fKm" type="number" inputmode="decimal" step="0.1" min="0" placeholder="مثلاً ۳٫۲" style="font-size:1.3rem;font-weight:800">' +
+          '<label class="flabel">تعداد قدم (اختیاری)<\/label><input class="field" id="fSteps" type="number" inputmode="numeric" min="0" placeholder="۰">' +
           dateTimeFields() +
-          '<button class="btn" id="fSave" style="margin-top:18px">ثبت پیاده‌روی</button>' +
-          '<button class="btn secondary" id="fCancel">انصراف</button>');
+          '<button class="btn" id="fSave" style="margin-top:18px">ثبت پیاده‌روی<\/button>' +
+          '<button class="btn secondary" id="fCancel">انصراف<\/button>');
         $("fCancel").onclick = closeSheet;
         $("fSave").onclick = function(){
           var km = parseFloat(toLatin($("fKm").value));
@@ -937,8 +1064,8 @@
 
       function openMed(){
         if(!db.meds.length){
-          openSheet('<h3>دارو خوردم</h3><p class="sub">هنوز دارویی تعریف نشده است. اول از صفحهٔ «تنظیمات» داروهایتان را با ساعت مصرف اضافه کنید.</p>' +
-            '<button class="btn" id="fGo">رفتن به تنظیمات</button><button class="btn secondary" id="fCancel">بستن</button>');
+          openSheet('<h3>دارو خوردم<\/h3><p class="sub">هنوز دارویی تعریف نشده است. اول از صفحهٔ «تنظیمات» داروهایتان را با ساعت مصرف اضافه کنید.<\/p>' +
+            '<button class="btn" id="fGo">رفتن به تنظیمات<\/button><button class="btn secondary" id="fCancel">بستن<\/button>');
           $("fCancel").onclick = closeSheet;
           $("fGo").onclick = function(){
             closeSheet();
@@ -947,9 +1074,9 @@
           return;
         }
         var doses = dosesForDay(Date.now());
-        openSheet('<h3>کدام نوبت را خوردید؟</h3><p class="sub">روی نوبت بزنید تا تیک بخورد؛ دوباره بزنید، تیک برداشته می‌شود.</p>' +
+        openSheet('<h3>کدام نوبت را خوردید؟<\/h3><p class="sub">روی نوبت بزنید تا تیک بخورد؛ دوباره بزنید، تیک برداشته می‌شود.<\/p>' +
           doses.map(function(d){ return doseRow(d, true); }).join("") +
-          '<button class="btn secondary" id="fCancel" style="margin-top:6px">بستن</button>');
+          '<button class="btn secondary" id="fCancel" style="margin-top:6px">بستن<\/button>');
         $("fCancel").onclick = closeSheet;
       }
 
@@ -1005,13 +1132,12 @@
         this.querySelectorAll("button").forEach(function(x){ x.classList.toggle("on", x === b); });
         renderReport();
       });
-      $("btnPrint").addEventListener("click", function(){ renderReport(); window.print(); });
       $("btnDownloadReport").addEventListener("click", function(){
         renderReport();
-        var html = '<!doctype html><html lang="fa" dir="rtl"><head><meta charset="utf-8"><title>گزارش سلامت‌یار</title>' +
-          '<style>body{font-family:Tahoma,sans-serif;line-height:1.8}table{width:100%;border-collapse:collapse}th,td{border:1px solid #999;padding:5px 7px;text-align:center}td:first-child,th:first-child{text-align:right}</style></head><body>' +
-          $("printSheet").innerHTML + '<script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){})});}</script>
-</body></html>';
+        var LT = "<";
+        var html = LT + "!doctype html>" + LT + "html lang=\"fa\" dir=\"rtl\">" + LT + "head>" + LT + "meta charset=\"utf-8\">" + LT + "title>گزارش سلامت‌یار<\/title>" +
+          LT + "style>body{font-family:Tahoma,sans-serif;line-height:1.8}table{width:100%;border-collapse:collapse}th,td{border:1px solid #999;padding:5px 7px;text-align:center}td:first-child,th:first-child{text-align:right}<\/style><\/head>" + LT + "body>" +
+          $("printSheet").innerHTML + '<\/body><\/html>';
         download("salamatyar-report.html", html, "text/html");
         toast("فایل گزارش دانلود شد");
       });
@@ -1065,23 +1191,9 @@
         };
         r.readAsText(f); this.value = "";
       });
-      $("btnTestDay").addEventListener("click", function(){
-        var start = todayStart();
-        var med = db.meds[0];
-        if(!med){
-          med = { id:uid(), name:"متفورمین", dose:"۵۰۰ میلی‌گرم", times:["08:00","20:00"] };
-          db.meds.push(med);
-        }
-        db.glucose.push({ id:uid(), value:118, type:"fasting", ts:start + 7.5 * 3600000, note:"روز آزمایشی" });
-        db.medLog[dayKey(Date.now()) + "|" + med.id + "|" + (med.times[0] || "08:00")] = Date.now();
-        db.meals.push({ id:uid(), name:"ناهار: برنج و مرغ (آزمایشی)", total:65, fiber:5, net:60, ts:start + 13 * 3600000 });
-        db.walks.push({ id:uid(), km:3.2, steps:4200, ts:start + 18 * 3600000 });
-        save(); renderAll(); toast("روز آزمایشی ثبت شد — صفحهٔ «امروز» را ببینید");
-        document.querySelector('nav.bottom button[data-view="today"]').click();
-      });
       $("btnClear").addEventListener("click", function(){
-        openSheet('<h3>حذف همهٔ داده‌ها؟</h3><p class="sub">همهٔ ثبت‌ها، داروها و تیک‌ها پاک می‌شود و برگشتی ندارد. اگر نسخهٔ پشتیبان ندارید، اول از بخش «داده‌های من» پشتیبان بگیرید.</p>' +
-          '<button class="btn danger" id="cYes">بله، همه را حذف کن</button><button class="btn secondary" id="cNo">انصراف</button>');
+        openSheet('<h3>حذف همهٔ داده‌ها؟<\/h3><p class="sub">همهٔ ثبت‌ها، داروها و تیک‌ها پاک می‌شود و برگشتی ندارد.<\/p>' +
+          '<button class="btn danger" id="cYes">بله، همه را حذف کن<\/button><button class="btn secondary" id="cNo">انصراف<\/button>');
         $("cNo").onclick = closeSheet;
         $("cYes").onclick = function(){
           db = blankDb(); save(); closeSheet(); renderAll(); toast("همهٔ داده‌ها حذف شد");
@@ -1091,5 +1203,6 @@
       renderAll();
     })();
     </script>
-  </body>
+  <script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){})});}</script>
+</body>
 </html>
