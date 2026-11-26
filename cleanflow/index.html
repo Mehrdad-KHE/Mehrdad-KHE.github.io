@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CleanFlow AI — Home Cleaning Services, Toronto &amp; GTA</title>
+<style>
+:root{--navy:#0e2a47;--teal:#0e7c7b;--teal2:#12a5a3;--gold:#c9a45c;--bg:#f4f7fa;--card:#ffffff;--ink:#16283c;--mut:#5a7186;--line:#dbe5ee;--ok:#0e7c7b}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink)}
+header{background:var(--navy);color:#fff;padding:14px 20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.logo{font-size:22px;font-weight:800;letter-spacing:.3px}
+.logo span{color:var(--gold)}
+.tag{font-size:13px;color:#cfe0ef}
+nav{margin-left:auto;display:flex;gap:6px;flex-wrap:wrap}
+nav button{background:transparent;border:1px solid #ffffff44;color:#fff;padding:8px 13px;border-radius:999px;cursor:pointer;font-size:14px}
+nav button.on{background:var(--teal);border-color:var(--teal)}
+main{max-width:1020px;margin:0 auto;padding:22px 16px 60px}
+.hero{background:linear-gradient(135deg,var(--navy),var(--teal));color:#fff;border-radius:18px;padding:34px 28px;margin-bottom:22px}
+.hero h1{font-size:30px;line-height:1.25;margin-bottom:10px}
+.hero p{color:#dceef5;max-width:640px;line-height:1.6}
+.hero .cta{margin-top:18px;display:flex;gap:10px;flex-wrap:wrap}
+.btn{background:var(--gold);color:#231a05;border:none;padding:11px 20px;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer}
+.btn.ghost{background:transparent;color:#fff;border:1px solid #ffffff88}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px}
+.card h3{font-size:18px;margin-bottom:6px}
+.price{font-size:22px;font-weight:800;color:var(--teal);margin:6px 0}
+.card p,.card li{color:var(--mut);font-size:14px;line-height:1.55}
+.card ul{margin:8px 0 0 18px}
+h2.sec{font-size:22px;margin:24px 0 12px}
+label{display:block;font-size:14px;font-weight:600;margin:12px 0 5px}
+input,select,textarea{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:9px;font-size:15px;background:#fff}
+textarea{resize:vertical}
+.row{display:flex;gap:12px;flex-wrap:wrap}
+.row>div{flex:1;min-width:150px}
+.stepper{display:flex;align-items:center;gap:10px}
+.stepper button{width:36px;height:36px;border-radius:9px;border:1px solid var(--line);background:#fff;font-size:19px;cursor:pointer}
+.stepper b{font-size:17px;min-width:20px;text-align:center}
+.check{display:flex;gap:8px;align-items:center;font-weight:500;margin-top:9px}
+.check input{width:auto}
+.estbox{background:#eefaf8;border:1px solid #bfe6e2;border-radius:12px;padding:16px;margin-top:16px}
+.estbox .big{font-size:26px;font-weight:800;color:var(--teal)}
+.hidden{display:none}
+.bookitem{border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin-top:10px;background:#fbfdff}
+.bookitem b{color:var(--navy)}
+.chatbox{border:1px solid var(--line);border-radius:14px;background:#fff;display:flex;flex-direction:column;height:430px}
+.msgs{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px}
+.msg{max-width:82%;padding:10px 14px;border-radius:14px;font-size:14.5px;line-height:1.55}
+.msg.bot{background:#eef4f9;align-self:flex-start}
+.msg.me{background:var(--teal);color:#fff;align-self:flex-end}
+.chatin{display:flex;gap:8px;padding:12px;border-top:1px solid var(--line)}
+.chatin input{flex:1}
+.chatin button{background:var(--teal);color:#fff;border:none;padding:10px 18px;border-radius:9px;font-weight:700;cursor:pointer}
+footer{color:var(--mut);font-size:13px;text-align:center;padding:20px}
+.note{font-size:13px;color:var(--mut);margin-top:10px;line-height:1.5}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">CleanFlow <span>AI</span></div>
+  <div class="tag">Home cleaning services — Toronto &amp; the GTA</div>
+  <nav>
+    <button data-tab="home" class="on">Home</button>
+    <button data-tab="services">Services</button>
+    <button data-tab="estimate">Price Estimate</button>
+    <button data-tab="booking">Booking</button>
+    <button data-tab="chat">AI Chat</button>
+  </nav>
+</header>
+<main>
+  <section id="tab-home">
+    <div class="hero">
+      <h1>A cleaner home, booked in minutes.</h1>
+      <p>CleanFlow AI is a home-cleaning service for Toronto and the GTA. See the services, get an instant approximate price, book a visit, and ask our AI assistant anything about services, scheduling and prices.</p>
+      <div class="cta">
+        <button class="btn" onclick="go('estimate')">Get my price</button>
+        <button class="btn ghost" onclick="go('booking')">Book a cleaning</button>
+      </div>
+    </div>
+    <h2 class="sec">How it works</h2>
+    <div class="grid">
+      <div class="card"><h3>1. Pick a service</h3><p>Regular, deep, move-in / move-out, or recurring cleaning.</p></div>
+      <div class="card"><h3>2. Get an instant estimate</h3><p>Tell us the size of your home and see an approximate price right away.</p></div>
+      <div class="card"><h3>3. Book your visit</h3><p>Send a booking request and get a reference number on the spot.</p></div>
+      <div class="card"><h3>4. Relax</h3><p>Our team arrives with all supplies and equipment included.</p></div>
+    </div>
+  </section>
+
+  <section id="tab-services" class="hidden">
+    <h2 class="sec">Services &amp; prices</h2>
+    <div class="grid" id="svcGrid"></div>
+    <h2 class="sec">Add-ons</h2>
+    <div class="grid" id="addonGrid"></div>
+  </section>
+
+  <section id="tab-estimate" class="hidden">
+    <h2 class="sec">Price estimate</h2>
+    <div class="card">
+      <label>Service</label>
+      <select id="eService"></select>
+      <div class="row">
+        <div><label>Bedrooms</label><div class="stepper"><button onclick="step('bed',-1)">−</button><b id="eBed">2</b><button onclick="step('bed',1)">+</button></div></div>
+        <div><label>Bathrooms</label><div class="stepper"><button onclick="step('bath',-1)">−</button><b id="eBath">1</b><button onclick="step('bath',1)">+</button></div></div>
+        <div><label>How often?</label>
+          <select id="eFreq">
+            <option value="0">One-time</option>
+            <option value="0.20">Weekly — 20% off</option>
+            <option value="0.15">Every 2 weeks — 15% off</option>
+            <option value="0.10">Monthly — 10% off</option>
+          </select>
+        </div>
+      </div>
+      <label>Add-ons</label>
+      <div id="eAddons"></div>
+      <div class="estbox">Approximate price: <span class="big" id="eTotal">$0</span><div class="note" id="eRange"></div></div>
+      <button class="btn" style="margin-top:14px" onclick="go('booking')">Book at this estimate</button>
+    </div>
+  </section>
+
+  <section id="tab-booking" class="hidden">
+    <h2 class="sec">Book a cleaning</h2>
+    <div class="card">
+      <div class="row">
+        <div><label>Full name</label><input id="bName" placeholder="Your name"></div>
+        <div><label>Phone</label><input id="bPhone" placeholder="647-000-0000"></div>
+      </div>
+      <div class="row">
+        <div><label>Service</label><select id="bService"></select></div>
+        <div><label>Preferred date</label><input id="bDate" type="date"></div>
+      </div>
+      <label>Address</label><input id="bAddr" placeholder="Street, unit, city">
+      <label>Notes</label><textarea id="bNotes" rows="2" placeholder="Anything we should know?"></textarea>
+      <button class="btn" style="margin-top:14px" onclick="submitBooking()">Submit booking request</button>
+      <div id="bDone" class="estbox hidden"></div>
+    </div>
+    <h2 class="sec">Your bookings on this page</h2>
+    <div id="bList"><p class="note">No bookings yet in this visit.</p></div>
+  </section>
+
+  <section id="tab-chat" class="hidden">
+    <h2 class="sec">AI Assistant</h2>
+    <div class="chatbox">
+      <div class="msgs" id="msgs">
+        <div class="msg bot">Hello! I am the CleanFlow AI assistant. Ask me about services, prices, scheduling, or how the cleaning works.</div>
+      </div>
+      <div class="chatin">
+        <input id="chatIn" placeholder="Type your question..." onkeydown="if(event.key==='Enter')sendChat()">
+        <button onclick="sendChat()">Send</button>
+      </div>
+    </div>
+    <p class="note">Try: "How much is a deep cleaning?" · "Do I need to be home?" · "What is included?" · "How do I reschedule?"</p>
+  </section>
+</main>
+<footer>CleanFlow AI — class project demo. Prices in Canadian dollars. Bookings shown here are kept only in this page visit.</footer>
+<script>
+var SERVICES=[
+ {id:"regular",name:"Regular Cleaning",base:119,perBed:18,perBath:12,desc:"Routine upkeep for a lived-in home.",inc:["Kitchen surfaces & sink","Bathrooms cleaned & sanitized","Dusting & floors vacuumed / mopped","Mirrors & fixtures polished"]},
+ {id:"deep",name:"Deep Cleaning",base:189,perBed:26,perBath:18,desc:"A full top-to-bottom reset.",inc:["Everything in Regular","Inside oven & fridge available as add-ons","Baseboards, vents & ceiling fans","Inside windows & tracks"]},
+ {id:"move",name:"Move-In / Move-Out",base:229,perBed:30,perBath:20,desc:"Empty-home cleaning for a smooth handover.",inc:["Inside all cabinets & drawers","Appliances inside & out","Walls spot-cleaned","Floors deep-scrubbed"]},
+ {id:"recurring",name:"Recurring Plan",base:109,perBed:16,perBath:11,desc:"Weekly, biweekly or monthly visits at a discount.",inc:["Same trusted team each visit","Flexible rescheduling","Priority booking","Up to 20% off one-time prices"]}
+];
+var ADDONS=[
+ {id:"fridge",name:"Inside fridge",price:35},
+ {id:"oven",name:"Inside oven",price:39},
+ {id:"laundry",name:"Laundry (wash & fold)",price:29},
+ {id:"windows",name:"Interior windows",price:45}
+];
+var state={bed:2,bath:1,bookings:[]};
+function money(n){return "$"+n.toFixed(2);}
+function svcById(id){for(var i=0;i<SERVICES.length;i++)if(SERVICES[i].id===id)return SERVICES[i];return SERVICES[0];}
+function go(tab){
+  var tabs=["home","services","estimate","booking","chat"];
+  for(var i=0;i<tabs.length;i++)document.getElementById("tab-"+tabs[i]).classList.toggle("hidden",tabs[i]!==tab);
+  var btns=document.querySelectorAll("nav button");
+  for(var j=0;j<btns.length;j++)btns[j].classList.toggle("on",btns[j].getAttribute("data-tab")===tab);
+  window.scrollTo(0,0);
+}
+var navBtns=document.querySelectorAll("nav button");
+for(var n=0;n<navBtns.length;n++){navBtns[n].addEventListener("click",function(){go(this.getAttribute("data-tab"));});}
+function renderServices(){
+  var g=document.getElementById("svcGrid");var h="";
+  for(var i=0;i<SERVICES.length;i++){var s=SERVICES[i];
+    h+='<div class="card"><h3>'+s.name+'</h3><p>'+s.desc+'</p><div class="price">from '+money(s.base)+' CAD</div><ul>';
+    for(var k=0;k<s.inc.length;k++)h+="<li>"+s.inc[k]+"</li>";
+    h+="</ul></div>";
+  }
+  g.innerHTML=h;
+  var a=document.getElementById("addonGrid");var h2="";
+  for(var j=0;j<ADDONS.length;j++){h2+='<div class="card"><h3>'+ADDONS[j].name+'</h3><div class="price">'+money(ADDONS[j].price)+' CAD</div></div>';}
+  a.innerHTML=h2;
+  var opts="";for(var m=0;m<SERVICES.length;m++)opts+='<option value="'+SERVICES[m].id+'">'+SERVICES[m].name+"</option>";
+  document.getElementById("eService").innerHTML=opts;
+  document.getElementById("bService").innerHTML=opts;
+  var ah="";for(var q=0;q<ADDONS.length;q++)ah+='<label class="check"><input type="checkbox" class="eAddon" value="'+ADDONS[q].id+'" onchange="calc()"> '+ADDONS[q].name+" — "+money(ADDONS[q].price)+"</label>";
+  document.getElementById("eAddons").innerHTML=ah;
+}
+function step(which,d){
+  if(which==="bed")state.bed=Math.max(0,Math.min(8,state.bed+d));
+  else state.bath=Math.max(1,Math.min(6,state.bath+d));
+  document.getElementById("eBed").textContent=state.bed;
+  document.getElementById("eBath").textContent=state.bath;
+  calc();
+}
+function calc(){
+  var s=svcById(document.getElementById("eService").value);
+  var total=s.base+s.perBed*state.bed+s.perBath*state.bath;
+  var boxes=document.querySelectorAll(".eAddon");
+  for(var i=0;i<boxes.length;i++)if(boxes[i].checked){for(var j=0;j<ADDONS.length;j++)if(ADDONS[j].id===boxes[i].value)total+=ADDONS[j].price;}
+  var disc=parseFloat(document.getElementById("eFreq").value);
+  total=total*(1-disc);
+  document.getElementById("eTotal").textContent=money(total);
+  document.getElementById("eRange").textContent="Typical range: "+money(total*0.95)+" – "+money(total*1.10)+" depending on the home's condition. Final price is confirmed before the visit.";
+  return total;
+}
+document.getElementById("eService").addEventListener("change",calc);
+document.getElementById("eFreq").addEventListener("change",calc);
+function submitBooking(){
+  var name=document.getElementById("bName").value.trim();
+  var phone=document.getElementById("bPhone").value.trim();
+  var date=document.getElementById("bDate").value;
+  if(!name||!phone||!date){alert("Please fill in your name, phone and a preferred date.");return;}
+  var ref="CF-"+Math.random().toString(36).substring(2,8).toUpperCase();
+  var s=svcById(document.getElementById("bService").value);
+  var bk={ref:ref,name:name,phone:phone,service:s.name,date:date,addr:document.getElementById("bAddr").value.trim(),notes:document.getElementById("bNotes").value.trim()};
+  state.bookings.push(bk);
+  var d=document.getElementById("bDone");d.classList.remove("hidden");
+  d.innerHTML="Booking received. Your reference is <b>"+ref+"</b>. We will call "+phone+" to confirm the visit.";
+  var h="";
+  for(var i=0;i<state.bookings.length;i++){var b=state.bookings[i];
+    h+='<div class="bookitem"><b>'+b.ref+"</b> — "+b.service+" · "+b.date+"<br>"+b.name+" · "+b.phone+(b.addr?"<br>"+b.addr:"")+"</div>";
+  }
+  document.getElementById("bList").innerHTML=h;
+}
+var FAQ=[
+ {k:["price","cost","much"],a:"Prices depend on the service and the size of your home. Regular cleaning starts at $119 CAD, deep cleaning at $189, and move-in / move-out at $229. Use the Price Estimate tab for an instant approximate price for your home."},
+ {k:["home","present","there"],a:"You do not need to be home during the cleaning. Most customers provide access instructions, and our team locks up when finished."},
+ {k:["included","include","cover"],a:"Every visit covers kitchen surfaces, bathrooms, dusting, and floors. Deep cleaning adds baseboards, vents and inside windows. You can see the full checklist for each service in the Services tab."},
+ {k:["reschedule","cancel","change"],a:"You can reschedule or cancel free of charge up to 24 hours before your visit. Just contact us with your booking reference."},
+ {k:["supplies","products","equipment"],a:"Our team brings all cleaning supplies and equipment. If you prefer specific products used in your home, tell us in the booking notes."},
+ {k:["long","duration","hours"],a:"A regular cleaning of a typical 2-bedroom home takes about 2 to 3 hours. Deep and move-in cleanings take longer, usually 4 to 6 hours."},
+ {k:["area","toronto","gta","serve"],a:"We serve Toronto and the GTA, including North York, Scarborough, Etobicoke, Mississauga, Richmond Hill and Markham."},
+ {k:["book","appointment","schedule"],a:"You can book right here in the Booking tab: choose a service and a preferred date, and you will get a booking reference right away. We then call to confirm the exact time."},
+ {k:["discount","weekly","recurring","often"],a:"Recurring plans save you money: weekly visits are 20% off, every 2 weeks 15% off, and monthly 10% off one-time prices."}
+];
+function sendChat(){
+  var inp=document.getElementById("chatIn");var q=inp.value.trim();if(!q)return;
+  var msgs=document.getElementById("msgs");
+  var me=document.createElement("div");me.className="msg me";me.textContent=q;msgs.appendChild(me);
+  inp.value="";
+  var low=q.toLowerCase();var ans="I can help with services, prices, scheduling and how the cleaning works. Could you tell me a bit more about what you need?";
+  for(var i=0;i<FAQ.length;i++){var hit=false;for(var j=0;j<FAQ[i].k.length;j++)if(low.indexOf(FAQ[i].k[j])>=0)hit=true;if(hit){ans=FAQ[i].a;break;}}
+  var bot=document.createElement("div");bot.className="msg bot";bot.textContent=ans;msgs.appendChild(bot);
+  msgs.scrollTop=msgs.scrollHeight;
+}
+renderServices();
+calc();
+</script>
+</body>
+</html>
