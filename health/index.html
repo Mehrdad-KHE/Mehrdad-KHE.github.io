@@ -1,1 +1,1095 @@
-<!-- placeholder -->
+<!doctype html>
+<html lang="fa" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#0e7a5f" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="سلامت‌یار" />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230e7a5f'/%3E%3Cpath d='M32 14v36M14 32h36' stroke='white' stroke-width='9' stroke-linecap='round'/%3E%3C/svg%3E" />
+    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230e7a5f'/%3E%3Cpath d='M32 14v36M14 32h36' stroke='white' stroke-width='9' stroke-linecap='round'/%3E%3C/svg%3E" />
+    <link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22%D8%B3%D9%84%D8%A7%D9%85%D8%AA%E2%80%8C%DB%8C%D8%A7%D8%B1%22%2C%22short_name%22%3A%22%D8%B3%D9%84%D8%A7%D9%85%D8%AA%E2%80%8C%DB%8C%D8%A7%D8%B1%22%2C%22lang%22%3A%22fa%22%2C%22dir%22%3A%22rtl%22%2C%22display%22%3A%22standalone%22%2C%22start_url%22%3A%22.%22%2C%22background_color%22%3A%22%23f4f6f4%22%2C%22theme_color%22%3A%22%230e7a5f%22%7D" />
+    <title>سلامت‌یار — ثبت قند، دارو، غذا و پیاده‌روی</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;800;900&display=swap" rel="stylesheet" />
+    <style>
+      :root{
+        --bg:#f4f6f4; --surface:#ffffff; --surface2:#edf2ee;
+        --ink:#182420; --muted:#5a6b62; --line:#dde5de;
+        --brand:#0e7a5f; --brand-dark:#0a5c48; --brand-soft:#e2f2ec;
+        --amber-bg:#fdf0d5; --amber-ink:#8a5a00;
+        --red:#b3261e; --red-bg:#fbe9e7;
+        --shadow:0 1px 3px rgba(20,40,32,.08),0 8px 24px rgba(20,40,32,.06);
+        --radius:18px;
+      }
+      @media (prefers-color-scheme: dark){
+        :root{
+          --bg:#101613; --surface:#1a211e; --surface2:#232d29;
+          --ink:#e9f0ec; --muted:#a3b5ab; --line:#2c3833;
+          --brand:#35bd97; --brand-dark:#8fe3c8; --brand-soft:#173a30;
+          --amber-bg:#3d2f10; --amber-ink:#f2c96d;
+          --red:#ff9d94; --red-bg:#3d1d1a;
+          --shadow:0 1px 3px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.3);
+        }
+      }
+      *{box-sizing:border-box}
+      html{-webkit-text-size-adjust:100%}
+      body{
+        margin:0; background:var(--bg); color:var(--ink);
+        font-family:"Vazirmatn",Tahoma,system-ui,sans-serif;
+        font-size:17px; line-height:1.65;
+      }
+      button,[role="button"],select,summary,input:not([type="checkbox"],[type="radio"]){min-height:2.75rem}
+      button{font-family:inherit; cursor:pointer}
+      input,select,textarea{font-family:inherit; font-size:1rem; color:var(--ink)}
+      .app{max-width:680px; margin:0 auto; padding:0 16px 110px}
+
+      /* ---------- header ---------- */
+      header.top{
+        position:sticky; top:0; z-index:30; background:var(--bg);
+        padding:14px 2px 10px; display:flex; align-items:center; gap:12px;
+        border-bottom:1px solid var(--line);
+      }
+      .logo{
+        width:46px; height:46px; border-radius:13px; background:var(--brand);
+        display:grid; place-items:center; flex:0 0 auto;
+      }
+      .logo svg{width:26px; height:26px}
+      header.top h1{font-size:1.45rem; font-weight:900; margin:0; line-height:1.2}
+      header.top .today-date{color:var(--muted); font-size:.92rem; margin:0}
+
+      /* ---------- views ---------- */
+      .view{display:none; padding-top:18px}
+      .view.active{display:block}
+      .view h2{font-size:1.3rem; font-weight:800; margin:0 0 4px}
+      .view .sub{color:var(--muted); margin:0 0 16px; font-size:.98rem}
+
+      .card{
+        background:var(--surface); border:1px solid var(--line); border-radius:var(--radius);
+        box-shadow:var(--shadow); padding:18px; margin-bottom:14px;
+      }
+      .card h3{margin:0 0 10px; font-size:1.08rem; font-weight:800; display:flex; align-items:center; gap:8px}
+      .card h3 svg{width:22px; height:22px; stroke:var(--brand); flex:0 0 auto}
+      .big-num{font-size:2.3rem; font-weight:800; line-height:1.15}
+      .big-num .num{font-weight:700; letter-spacing:.01em}
+      .unit{font-size:.95rem; color:var(--muted); font-weight:500}
+      .muted{color:var(--muted)}
+      .rowline{display:flex; justify-content:space-between; align-items:center; gap:10px; padding:9px 0; border-top:1px dashed var(--line)}
+      .rowline:first-of-type{border-top:none}
+      .chip{
+        display:inline-block; padding:2px 12px; border-radius:999px; font-size:.85rem; font-weight:700;
+        background:var(--brand-soft); color:var(--brand-dark);
+      }
+      .chip.warn{background:var(--amber-bg); color:var(--amber-ink)}
+      .chip.over{background:var(--red-bg); color:var(--red)}
+      .empty{
+        text-align:center; color:var(--muted); padding:26px 14px; border:1.5px dashed var(--line);
+        border-radius:var(--radius); background:var(--surface); margin-bottom:14px; font-size:1rem;
+      }
+
+      /* progress bar */
+      .pbar{height:16px; background:var(--surface2); border-radius:999px; overflow:hidden; margin:10px 0 6px}
+      .pbar > div{height:100%; background:var(--brand); border-radius:999px; transition:width .4s ease}
+      .pbar.done > div{background:var(--brand-dark)}
+
+      /* dose checklist */
+      .dose{
+        display:flex; align-items:center; gap:12px; width:100%; text-align:right;
+        background:var(--surface2); border:1.5px solid var(--line); border-radius:14px;
+        padding:12px 14px; margin-bottom:10px; font-size:1.02rem; color:var(--ink); min-height:60px;
+      }
+      .dose .box{
+        width:32px; height:32px; border-radius:9px; border:2.5px solid var(--brand);
+        display:grid; place-items:center; flex:0 0 auto; background:var(--surface);
+      }
+      .dose .box svg{width:19px; height:19px; stroke:#fff; opacity:0}
+      .dose.taken{border-color:var(--brand); background:var(--brand-soft)}
+      .dose.taken .box{background:var(--brand)}
+      .dose.taken .box svg{opacity:1}
+      .dose.taken .dose-name{text-decoration:line-through; opacity:.75}
+      .dose .dose-time{margin-inline-start:auto; font-weight:800; white-space:nowrap}
+      .dose.past-due{border-color:var(--amber-ink)}
+      .reminder{
+        background:var(--amber-bg); color:var(--amber-ink); border-radius:14px;
+        padding:12px 16px; margin-bottom:14px; font-weight:700; display:flex; gap:10px; align-items:flex-start;
+      }
+      .reminder svg{width:22px; height:22px; flex:0 0 auto; margin-top:3px}
+
+      /* quick log grid */
+      .quick-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px}
+      .quick-btn{
+        background:var(--surface); border:1.5px solid var(--line); border-radius:20px; box-shadow:var(--shadow);
+        padding:22px 12px 18px; display:flex; flex-direction:column; align-items:center; gap:10px;
+        font-size:1.12rem; font-weight:800; color:var(--ink); min-height:132px;
+      }
+      .quick-btn .ic{
+        width:58px; height:58px; border-radius:50%; background:var(--brand-soft);
+        display:grid; place-items:center;
+      }
+      .quick-btn .ic svg{width:30px; height:30px; stroke:var(--brand)}
+      .quick-btn:active{transform:scale(.98)}
+      .quick-note{margin-top:16px}
+
+      /* notebook */
+      .filters{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px}
+      .filters button{
+        border:1.5px solid var(--line); background:var(--surface); color:var(--ink);
+        border-radius:999px; padding:6px 18px; font-size:.98rem; font-weight:700; min-height:44px;
+      }
+      .filters button.on{background:var(--brand); border-color:var(--brand); color:#fff}
+      .day-title{font-weight:800; font-size:1.05rem; margin:20px 2px 10px; display:flex; justify-content:space-between; align-items:baseline}
+      .day-title span{color:var(--muted); font-size:.88rem; font-weight:500}
+      .entry{
+        background:var(--surface); border:1px solid var(--line); border-radius:14px; box-shadow:var(--shadow);
+        padding:12px 14px; margin-bottom:9px; display:flex; align-items:center; gap:12px;
+      }
+      .entry .ic{width:42px; height:42px; border-radius:12px; background:var(--brand-soft); display:grid; place-items:center; flex:0 0 auto}
+      .entry .ic svg{width:23px; height:23px; stroke:var(--brand)}
+      .entry .main{flex:1; min-width:0}
+      .entry .t{font-weight:800; font-size:1.02rem}
+      .entry .d{color:var(--muted); font-size:.92rem}
+      .entry .del{
+        background:none; border:none; color:var(--red); font-size:.9rem; font-weight:700;
+        padding:8px 10px; min-height:44px; border-radius:10px;
+      }
+
+      /* report */
+      .seg{display:flex; background:var(--surface2); border-radius:12px; padding:4px; margin-bottom:16px}
+      .seg button{flex:1; border:none; background:transparent; border-radius:9px; font-size:1.05rem; font-weight:800; color:var(--muted); min-height:48px}
+      .seg button.on{background:var(--surface); color:var(--ink); box-shadow:var(--shadow)}
+      .tiles{display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px}
+      .tile{background:var(--surface); border:1px solid var(--line); border-radius:16px; box-shadow:var(--shadow); padding:14px 16px}
+      .tile .v{font-size:1.7rem; font-weight:800; line-height:1.2}
+      .tile .k{color:var(--muted); font-size:.92rem}
+      table.rep{width:100%; border-collapse:collapse; font-size:.95rem}
+      table.rep th, table.rep td{padding:9px 6px; border-bottom:1px solid var(--line); text-align:center}
+      table.rep th{color:var(--muted); font-weight:700; font-size:.88rem}
+      table.rep td:first-child, table.rep th:first-child{text-align:right; font-weight:700}
+      .tablewrap{overflow-x:auto}
+      .chart-box{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); padding:16px; margin-bottom:14px}
+      .chart-box h3{margin:0 0 8px; font-size:1.05rem; font-weight:800}
+      .btn{
+        display:inline-flex; align-items:center; justify-content:center; gap:8px;
+        background:var(--brand); color:#fff; border:none; border-radius:13px;
+        padding:12px 22px; font-size:1.05rem; font-weight:800; min-height:52px; width:100%;
+      }
+      .btn.secondary{background:var(--surface2); color:var(--ink); border:1.5px solid var(--line)}
+      .btn.danger{background:var(--red-bg); color:var(--red); border:1.5px solid var(--red)}
+      .btn + .btn{margin-top:10px}
+      .btn svg{width:21px; height:21px}
+
+      /* settings */
+      .med-item{display:flex; align-items:center; gap:10px; padding:12px 0; border-bottom:1px dashed var(--line)}
+      .med-item:last-child{border-bottom:none}
+      .med-item .info{flex:1}
+      label.flabel{display:block; font-weight:700; margin:14px 0 6px; font-size:1rem}
+      label.flabel:first-child{margin-top:0}
+      .field{
+        width:100%; padding:12px 14px; border:1.5px solid var(--line); border-radius:12px;
+        background:var(--surface); min-height:52px;
+      }
+      .field:focus{outline:2px solid var(--brand); outline-offset:1px; border-color:var(--brand)}
+      textarea.field{min-height:52px; resize:vertical}
+      .hint{color:var(--muted); font-size:.88rem; margin-top:5px}
+      .steps{margin:0; padding-inline-start:22px}
+      .steps li{margin-bottom:9px}
+      .disclaimer{
+        border:1.5px solid var(--amber-ink); background:var(--amber-bg); color:var(--amber-ink);
+        border-radius:14px; padding:13px 16px; font-weight:700; margin-bottom:14px;
+      }
+
+      /* bottom nav */
+      nav.bottom{
+        position:fixed; bottom:0; left:50%; transform:translateX(-50%);
+        width:min(680px,100%); background:var(--surface); border-top:1.5px solid var(--line);
+        display:flex; z-index:40; padding-bottom:env(safe-area-inset-bottom);
+      }
+      nav.bottom button{
+        flex:1; background:none; border:none; color:var(--muted); min-height:64px;
+        display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px;
+        font-size:.86rem; font-weight:700; padding:6px 2px;
+      }
+      nav.bottom button svg{width:25px; height:25px}
+      nav.bottom button.on{color:var(--brand)}
+      nav.bottom button.on svg{stroke:var(--brand)}
+
+      /* bottom sheet */
+      .overlay{
+        position:fixed; inset:0; background:rgba(10,20,16,.55); z-index:50;
+        display:none; align-items:flex-end; justify-content:center;
+      }
+      .overlay.open{display:flex}
+      .sheet{
+        background:var(--surface); width:min(680px,100%); max-height:92vh; overflow-y:auto;
+        border-radius:24px 24px 0 0; padding:22px 20px calc(22px + env(safe-area-inset-bottom));
+      }
+      .sheet h3{margin:0 0 4px; font-size:1.3rem; font-weight:900}
+      .sheet .sub{color:var(--muted); margin:0 0 8px}
+      .net-out{
+        background:var(--brand-soft); border-radius:14px; padding:12px 16px; margin-top:14px;
+        display:flex; justify-content:space-between; align-items:center; font-weight:800;
+      }
+      .net-out .v{font-size:1.5rem; font-weight:900}
+      .net-out.over{background:var(--red-bg); color:var(--red)}
+      .toast{
+        position:fixed; bottom:86px; left:50%; transform:translateX(-50%) translateY(20px);
+        background:var(--brand-dark); color:#fff; padding:12px 26px; border-radius:999px;
+        font-weight:800; font-size:1.02rem; opacity:0; pointer-events:none; transition:.25s; z-index:60;
+        box-shadow:var(--shadow); white-space:nowrap;
+      }
+      @media (prefers-color-scheme: dark){ .toast{background:var(--brand); color:#06231b} }
+      .toast.show{opacity:1; transform:translateX(-50%) translateY(0)}
+
+      footer.note{color:var(--muted); font-size:.9rem; text-align:center; padding:8px 10px 0}
+
+      /* ---------- print: only the doctor report ---------- */
+      #printSheet{display:none}
+      @media print{
+        body{background:#fff}
+        header.top, nav.bottom, .no-print, .view{display:none !important}
+        .app{padding:0; max-width:none}
+        #printSheet{display:block; color:#000; font-size:13px}
+        #printSheet h1{font-size:20px; margin:0 0 2px}
+        #printSheet h2{font-size:15px; margin:18px 0 6px}
+        #printSheet table{width:100%; border-collapse:collapse}
+        #printSheet th, #printSheet td{border:1px solid #999; padding:5px 7px; text-align:center}
+        #printSheet td:first-child, #printSheet th:first-child{text-align:right}
+        #printSheet .meta{color:#444; margin-bottom:10px}
+        #printSheet .foot{margin-top:16px; color:#444; font-size:11.5px}
+      }
+      @media (prefers-reduced-motion: reduce){
+        .pbar > div, .toast{transition:none}
+      }
+    </style>
+  <link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#0e7a5f">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="سلامت‌یار">
+<link rel="apple-touch-icon" href="icon-192.png">
+</head>
+  <body>
+    <div class="app" id="app">
+      <header class="top">
+        <div class="logo" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round"><path d="M12 4v16M4 12h16"/></svg>
+        </div>
+        <div>
+          <h1>سلامت‌یار</h1>
+          <p class="today-date" id="todayDate"></p>
+        </div>
+      </header>
+
+      <!-- ============ امروز ============ -->
+      <section class="view active" id="view-today">
+        <div id="reminderBox"></div>
+
+        <div class="card">
+          <h3><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c3.5 4.2 6 7.6 6 10.5A6 6 0 0 1 6 13.5C6 10.6 8.5 7.2 12 3z"/></svg>قند خون امروز</h3>
+          <div id="todayGlucose"></div>
+        </div>
+
+        <div class="card">
+          <h3><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.5 3.5a5 5 0 0 1 7 7L13 15l-7-7 4.5-4.5z"/><path d="M6.5 10.5l7 7"/><path d="M3 21l3.5-1L8 16.5 6.5 15 3 21z" opacity="0"/></svg>داروها</h3>
+          <div id="nextDose"></div>
+          <div id="todayDoses"></div>
+        </div>
+
+        <div class="card">
+          <h3><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13" cy="4.5" r="1.8"/><path d="M13 8l-2.5 5L13 16l1 5"/><path d="M10.5 13L7 15l-1 4"/><path d="M13 16l2.5 2 1 3.5"/><path d="M10 9.5L7.5 11"/></svg>پیاده‌روی امروز</h3>
+          <div id="todayWalk"></div>
+        </div>
+
+        <div class="card">
+          <h3><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 3v7a2 2 0 0 0 2 2h0a2 2 0 0 0 2-2V3"/><path d="M6 3v18"/><path d="M18 3c-2 0-3 2.5-3 5v4h3v9"/><path d="M18 3v9"/></svg>غذای امروز</h3>
+          <div id="todayMeals"></div>
+        </div>
+
+        <footer class="note">سلامت‌یار فقط برای ثبت، یادآوری و گزارش است؛ تشخیص نمی‌دهد و درمان پیشنهاد نمی‌کند.</footer>
+      </section>
+
+      <!-- ============ ثبت سریع ============ -->
+      <section class="view" id="view-add">
+        <h2>ثبت سریع</h2>
+        <p class="sub">هر ثبت فقط چند ثانیه طول می‌کشد؛ روی یکی بزنید.</p>
+        <div class="quick-grid">
+          <button class="quick-btn" data-log="glucose">
+            <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c3.5 4.2 6 7.6 6 10.5A6 6 0 0 1 6 13.5C6 10.6 8.5 7.2 12 3z"/></svg></span>
+            ＋ قند خون
+          </button>
+          <button class="quick-btn" data-log="med">
+            <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="8.5" width="17" height="7" rx="3.5" transform="rotate(-45 12 12)"/><path d="M9 9l6 6"/></svg></span>
+            ＋ دارو خوردم
+          </button>
+          <button class="quick-btn" data-log="meal">
+            <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 3v7a2 2 0 0 0 2 2h0a2 2 0 0 0 2-2V3"/><path d="M6 3v18"/><path d="M18 3c-2 0-3 2.5-3 5v4h3v9"/><path d="M18 3v9"/></svg></span>
+            ＋ وعدهٔ غذا
+          </button>
+          <button class="quick-btn" data-log="walk">
+            <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13" cy="4.5" r="1.8"/><path d="M13 8l-2.5 5L13 16l1 5"/><path d="M10.5 13L7 15l-1 4"/><path d="M13 16l2.5 2 1 3.5"/></svg></span>
+            ＋ پیاده‌روی
+          </button>
+        </div>
+        <div class="card quick-note">
+          <h3>ثبت دارو از همین‌جا</h3>
+          <p class="muted" style="margin:0">دکمهٔ «دارو خوردم» نوبت‌های امروز را نشان می‌دهد؛ کافی است روی همان نوبت بزنید تا تیک بخورد. تیک‌ها در صفحهٔ «امروز» هم هست.</p>
+        </div>
+      </section>
+
+      <!-- ============ دفترچه ============ -->
+      <section class="view" id="view-book">
+        <h2>دفترچه</h2>
+        <p class="sub">تاریخچهٔ روزبه‌روزِ همهٔ ثبت‌ها.</p>
+        <div class="filters" id="bookFilters">
+          <button data-f="all" class="on">همه</button>
+          <button data-f="glucose">قند خون</button>
+          <button data-f="med">دارو</button>
+          <button data-f="meal">غذا</button>
+          <button data-f="walk">پیاده‌روی</button>
+        </div>
+        <div id="bookList"></div>
+      </section>
+
+      <!-- ============ گزارش ============ -->
+      <section class="view" id="view-report">
+        <h2>گزارش</h2>
+        <p class="sub">خلاصهٔ تمیز برای نشان‌دادن به دکتر.</p>
+        <div class="seg no-print" id="repSeg">
+          <button data-r="week" class="on">هفتهٔ گذشته</button>
+          <button data-r="month">ماه گذشته</button>
+        </div>
+        <div id="reportBody"></div>
+        <div class="no-print">
+          <button class="btn" id="btnPrint">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3h12v6"/><rect x="3" y="9" width="18" height="8" rx="2"/><path d="M6 14h12v7H6z"/></svg>
+            چاپ / ذخیره به‌صورت PDF
+          </button>
+          <button class="btn secondary" id="btnDownloadReport">دانلود فایل گزارش (HTML)</button>
+          <p class="hint">در پنجرهٔ چاپ، گزینهٔ «Save as PDF» را انتخاب کنید تا فایل PDF گزارش ساخته شود.</p>
+        </div>
+      </section>
+
+      <!-- ============ تنظیمات ============ -->
+      <section class="view" id="view-settings">
+        <h2>تنظیمات</h2>
+        <p class="sub">داروها، هدف پیاده‌روی و سقف کربوهیدرات هر وعده.</p>
+
+        <div class="disclaimer">خط قرمز سلامت‌یار: این اپ تشخیص نمی‌دهد و درمان پیشنهاد نمی‌کند؛ فقط ثبت، یادآوری و گزارش.</div>
+
+        <div class="card">
+          <h3>داروهای من</h3>
+          <div id="medList"></div>
+          <form id="medForm">
+            <label class="flabel" for="medName">نام دارو</label>
+            <input class="field" id="medName" type="text" placeholder="مثلاً متفورمین" autocomplete="off" />
+            <label class="flabel" for="medDose">دوز</label>
+            <input class="field" id="medDose" type="text" placeholder="مثلاً ۵۰۰ میلی‌گرم" autocomplete="off" />
+            <label class="flabel" for="medTimes">ساعت‌های مصرف</label>
+            <input class="field" id="medTimes" type="text" placeholder="مثلاً 08:00 و 20:00" autocomplete="off" dir="ltr" style="text-align:left" />
+            <p class="hint">ساعت‌ها را با قالب ۲۴ ساعته بنویسید و با «و» یا ویرگول جدا کنید.</p>
+            <button class="btn" type="submit" style="margin-top:12px">افزودن دارو</button>
+          </form>
+        </div>
+
+        <div class="card">
+          <h3>هدف‌ها</h3>
+          <form id="goalForm">
+            <label class="flabel" for="goalWalk">هدف پیاده‌روی روزانه (کیلومتر)</label>
+            <input class="field" id="goalWalk" type="number" inputmode="decimal" step="0.1" min="0" />
+            <label class="flabel" for="goalCarb">سقف کربوهیدرات خالص هر وعده (گرم)</label>
+            <input class="field" id="goalCarb" type="number" inputmode="numeric" step="1" min="0" />
+            <p class="hint">این سقف را خودتان تعیین می‌کنید؛ هر وعده‌ای که از آن بگذرد، در اپ هشدار می‌گیرد.</p>
+            <button class="btn" type="submit" style="margin-top:12px">ذخیرهٔ هدف‌ها</button>
+          </form>
+        </div>
+
+        <div class="card">
+          <h3>تست یک روز کامل</h3>
+          <p class="muted" style="margin-top:0">برای آزمودن اپ، یک روز نمونه ثبت می‌شود: یک قند ناشتا، یک نوبت دارو، یک وعدهٔ ناهار و یک پیاده‌روی. هر وقت خواستید از دفترچه حذفشان کنید.</p>
+          <button class="btn secondary" id="btnTestDay" type="button">ثبت روز آزمایشی</button>
+        </div>
+
+        <div class="card">
+          <h3>داده‌های من</h3>
+          <p class="muted" style="margin-top:0">همهٔ اطلاعات فقط روی همین گوشی و در همین مرورگر می‌ماند؛ هیچ سروری در کار نیست و چیزی جایی فرستاده نمی‌شود. برای اطمینان، هر از گاهی یک نسخهٔ پشتیبان بگیرید.</p>
+          <button class="btn secondary" id="btnExport" type="button">دانلود نسخهٔ پشتیبان (JSON)</button>
+          <label class="btn secondary" for="importFile" style="margin-top:10px">بازیابی از نسخهٔ پشتیبان</label>
+          <input id="importFile" type="file" accept="application/json" hidden />
+          <button class="btn danger" id="btnClear" type="button" style="margin-top:10px">حذف همهٔ داده‌ها</button>
+        </div>
+
+        <div class="card">
+          <h3>انتشار در GitHub و نصب روی گوشی</h3>
+          <ol class="steps">
+            <li>در GitHub یک مخزن (Repository) تازه بسازید و این فایل را با نام <b>index.html</b> در آن آپلود کنید.</li>
+            <li>از Settings مخزن، بخش Pages را باز کنید و منبع را روی شاخهٔ اصلی (main) بگذارید؛ چند دقیقه بعد لینک زنده آماده است.</li>
+            <li>لینک را روی گوشی باز کنید؛ در آیفون: دکمهٔ اشتراک‌گذاری ← «Add to Home Screen». در اندروید: منوی مرورگر ← «نصب برنامه / Add to Home screen».</li>
+            <li>از این به بعد سلامت‌یار مثل یک اپ واقعی از صفحهٔ اصلی گوشی باز می‌شود.</li>
+          </ol>
+        </div>
+      </section>
+
+      <!-- printable doctor report (filled by JS) -->
+      <div id="printSheet" aria-hidden="true"></div>
+    </div>
+
+    <!-- bottom navigation -->
+    <nav class="bottom" id="bottomNav">
+      <button data-view="today" class="on">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>
+        امروز
+      </button>
+      <button data-view="add">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg>
+        ثبت سریع
+      </button>
+      <button data-view="book">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4a2 2 0 0 1 2-2h14v18H6a2 2 0 0 0-2 2z"/><path d="M4 20a2 2 0 0 1 2-2h14"/></svg>
+        دفترچه
+      </button>
+      <button data-view="report">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 20V10"/><path d="M10 20V4"/><path d="M16 20v-8"/><path d="M22 20H2" opacity="0"/></svg>
+        گزارش
+      </button>
+      <button data-view="settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3.2"/><path d="M19 12a7 7 0 0 0-.14-1.4l2.1-1.63-2-3.46-2.49 1a7 7 0 0 0-2.42-1.4L13.66 2.6h-3.32l-.39 2.51a7 7 0 0 0-2.42 1.4l-2.49-1-2 3.46L5.14 10.6a7 7 0 0 0 0 2.8l-2.1 1.63 2 3.46 2.49-1a7 7 0 0 0 2.42 1.4l.39 2.51h3.32l.39-2.51a7 7 0 0 0 2.42-1.4l2.49 1 2-3.46-2.1-1.63c.1-.45.14-.92.14-1.4z"/></svg>
+        تنظیمات
+      </button>
+    </nav>
+
+    <!-- bottom sheet for forms -->
+    <div class="overlay" id="overlay">
+      <div class="sheet" id="sheet" role="dialog" aria-modal="true"></div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+    (function(){
+      "use strict";
+      var KEY = "salamatyar.v1";
+
+      /* ---------- storage (this device only, no server) ---------- */
+      function blankDb(){
+        return { meds:[], glucose:[], meals:[], walks:[], medLog:{},
+                 settings:{ walkGoalKm:3, carbLimit:45 } };
+      }
+      function load(){
+        try{
+          var raw = localStorage.getItem(KEY);
+          if(!raw) return blankDb();
+          var d = JSON.parse(raw), b = blankDb();
+          for(var k in b){ if(d[k] === undefined) d[k] = b[k]; }
+          return d;
+        }catch(e){ return blankDb(); }
+      }
+      var db = load();
+      function save(){ try{ localStorage.setItem(KEY, JSON.stringify(db)); }catch(e){} }
+      function uid(){ return Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
+
+      /* ---------- helpers ---------- */
+      var FA = "۰۱۲۳۴۵۶۷۸۹";
+      function faNum(n){
+        if(n === null || n === undefined || n === "") return "—";
+        return String(n).replace(/[0-9]/g, function(d){ return FA[+d]; });
+      }
+      function faTime(ts){
+        var d = new Date(ts);
+        var h = String(d.getHours()).padStart(2,"0"), m = String(d.getMinutes()).padStart(2,"0");
+        return faNum(h) + ":" + faNum(m);
+      }
+      function toLatin(s){
+        return String(s).replace(/[۰-۹]/g, function(c){ return FA.indexOf(c); })
+                        .replace(/[٠-٩]/g, function(c){ return "٠١٢٣٤٥٦٧٨٩".indexOf(c); });
+      }
+      function dayKey(ts){
+        var d = new Date(ts);
+        return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0");
+      }
+      function todayStart(){ var d = new Date(); d.setHours(0,0,0,0); return d.getTime(); }
+      function dayLabel(ts){
+        var d = new Date(ts), now = new Date();
+        var dayFmt = new Intl.DateTimeFormat("fa-IR", { weekday:"long", day:"numeric", month:"long" });
+        var diff = Math.floor((todayStart() - new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime()) / 86400000);
+        if(diff === 0) return "امروز — " + dayFmt.format(d);
+        if(diff === 1) return "دیروز — " + dayFmt.format(d);
+        return new Intl.DateTimeFormat("fa-IR", { weekday:"long", day:"numeric", month:"long", year:"numeric" }).format(d);
+      }
+      function esc(s){
+        return String(s == null ? "" : s).replace(/[&<>"']/g, function(c){
+          return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];
+        });
+      }
+      function $(id){ return document.getElementById(id); }
+      function toast(msg){
+        var t = $("toast"); t.textContent = msg; t.classList.add("show");
+        setTimeout(function(){ t.classList.remove("show"); }, 2200);
+      }
+      function nowTimeValue(){
+        var d = new Date();
+        return String(d.getHours()).padStart(2,"0") + ":" + String(d.getMinutes()).padStart(2,"0");
+      }
+      function tsFromDateTime(dateStr, timeStr){
+        var t = new Date(dateStr + "T" + (timeStr || "12:00") + ":00");
+        return isNaN(t.getTime()) ? Date.now() : t.getTime();
+      }
+      function todayDateValue(){ return dayKey(Date.now()); }
+
+      /* ---------- icons ---------- */
+      var IC = {
+        glucose:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c3.5 4.2 6 7.6 6 10.5A6 6 0 0 1 6 13.5C6 10.6 8.5 7.2 12 3z"/></svg>',
+        med:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="8.5" width="17" height="7" rx="3.5" transform="rotate(-45 12 12)"/><path d="M9 9l6 6"/></svg>',
+        meal:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 3v7a2 2 0 0 0 2 2h0a2 2 0 0 0 2-2V3"/><path d="M6 3v18"/><path d="M18 3c-2 0-3 2.5-3 5v4h3v9"/><path d="M18 3v9"/></svg>',
+        walk:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13" cy="4.5" r="1.8"/><path d="M13 8l-2.5 5L13 16l1 5"/><path d="M10.5 13L7 15l-1 4"/><path d="M13 16l2.5 2 1 3.5"/></svg>',
+        check:'<svg viewBox="0 0 24 24" fill="none" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12.5l5 5 10-11"/></svg>',
+        bell:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 9a6 6 0 1 0-12 0c0 6-2.5 7-2.5 7h17S18 15 18 9z"/><path d="M10 20a2.2 2.2 0 0 0 4 0"/></svg>'
+      };
+
+      /* ---------- doses ---------- */
+      function dosesForDay(ts){
+        var dk = dayKey(ts), out = [];
+        db.meds.forEach(function(m){
+          (m.times || []).forEach(function(t){
+            var key = dk + "|" + m.id + "|" + t;
+            out.push({ key:key, med:m, time:t, taken: !!db.medLog[key],
+                       ts: tsFromDateTime(dk, t) });
+          });
+        });
+        out.sort(function(a,b){ return a.time < b.time ? -1 : 1; });
+        return out;
+      }
+      function toggleDose(key){
+        if(db.medLog[key]){ delete db.medLog[key]; }
+        else{ db.medLog[key] = Date.now(); }
+        save(); renderAll();
+      }
+      function doseRow(d, showPastDue){
+        var now = Date.now();
+        var pastDue = showPastDue && !d.taken && d.ts < now && dayKey(d.ts) === dayKey(now);
+        return '<button class="dose' + (d.taken ? " taken" : "") + (pastDue ? " past-due" : "") +
+          '" data-dose="' + esc(d.key) + '">' +
+          '<span class="box">' + IC.check + '</span>' +
+          '<span class="dose-name">' + esc(d.med.name) + (d.med.dose ? ' <span class="muted">' + esc(d.med.dose) + '</span>' : '') + '</span>' +
+          (pastDue ? '<span class="chip warn">گذشته</span>' : '') +
+          '<span class="dose-time">' + faNum(d.time) + '</span></button>';
+      }
+
+      /* ---------- today ---------- */
+      function renderToday(){
+        $("todayDate").textContent = new Intl.DateTimeFormat("fa-IR",
+          { weekday:"long", day:"numeric", month:"long", year:"numeric" }).format(new Date());
+        var start = todayStart(), end = start + 86400000;
+        var inToday = function(e){ return e.ts >= start && e.ts < end; };
+
+        /* reminder: doses whose time passed today, not yet ticked */
+        var doses = dosesForDay(Date.now());
+        var overdue = doses.filter(function(d){ return !d.taken && d.ts < Date.now(); });
+        $("reminderBox").innerHTML = overdue.length ?
+          '<div class="reminder">' + IC.bell + '<span>یادآوری: نوبت ' +
+          overdue.map(function(d){ return esc(d.med.name) + " ساعت " + faNum(d.time); }).join(" و ") +
+          ' هنوز تیک نخورده است.</span></div>' : "";
+
+        /* glucose */
+        var g = db.glucose.filter(inToday).sort(function(a,b){ return b.ts - a.ts; });
+        if(!g.length){
+          $("todayGlucose").innerHTML = '<p class="muted" style="margin:0">هنوز قندی برای امروز ثبت نشده است. از «ثبت سریع» اولین قند را ثبت کنید.</p>';
+        } else {
+          var last = g[0];
+          var html = '<div class="big-num">' + faNum(last.value) + ' <span class="unit">میلی‌گرم بر دسی‌لیتر — ' +
+            (last.type === "fasting" ? "ناشتا" : "بعد از غذا") + '، ساعت ' + faTime(last.ts) + '</span></div>';
+          g.slice(1).forEach(function(e){
+            html += '<div class="rowline"><span>' + (e.type === "fasting" ? "ناشتا" : "بعد از غذا") + '</span><b>' +
+              faNum(e.value) + '</b><span class="muted">' + faTime(e.ts) + '</span></div>';
+          });
+          $("todayGlucose").innerHTML = html;
+        }
+
+        /* next dose + checklist */
+        if(!db.meds.length){
+          $("nextDose").innerHTML = '<p class="muted" style="margin:0 0 6px">هنوز دارویی تعریف نشده است؛ از صفحهٔ «تنظیمات» داروهایتان را اضافه کنید.</p>';
+          $("todayDoses").innerHTML = "";
+        } else {
+          var now = Date.now();
+          var upcoming = doses.filter(function(d){ return !d.taken && d.ts >= now; });
+          var next = upcoming[0];
+          if(next){
+            $("nextDose").innerHTML = '<div class="rowline"><span class="muted">داروی بعدی</span><b>' +
+              esc(next.med.name) + (next.med.dose ? " " + esc(next.med.dose) : "") + '</b><span class="chip">ساعت ' + faNum(next.time) + '</span></div>';
+          } else {
+            var tom = dosesForDay(now + 86400000)[0];
+            $("nextDose").innerHTML = '<div class="rowline"><span class="muted">داروی بعدی</span><b>' +
+              (tom ? esc(tom.med.name) + '</b><span class="chip">فردا ساعت ' + faNum(tom.time) + '</span>'
+                   : '—</b>') + '</div>';
+          }
+          $("todayDoses").innerHTML = '<p class="muted" style="margin:12px 0 8px">نوبت‌های امروز — هرکدام را که خوردید، تیک بزنید:</p>' +
+            doses.map(function(d){ return doseRow(d, true); }).join("");
+        }
+
+        /* walking */
+        var km = db.walks.filter(inToday).reduce(function(s,e){ return s + (+e.km || 0); }, 0);
+        var goal = +db.settings.walkGoalKm || 0;
+        var pct = goal > 0 ? Math.min(100, Math.round(km / goal * 100)) : 0;
+        var kmText = km === 0 ? "صفر" : faNum(km.toFixed(1).replace(/\.0$/,""));
+        $("todayWalk").innerHTML =
+          '<div class="big-num"><span class="num">' + kmText + '</span> <span class="unit">کیلومتر از هدف ' + faNum(goal) + ' کیلومتر</span></div>' +
+          '<div class="pbar' + (pct >= 100 ? " done" : "") + '"><div style="width:' + pct + '%"></div></div>' +
+          '<span class="muted">' + (pct >= 100 ? "به هدف امروز رسیدید." : faNum(pct) + "٪ از هدف امروز") + '</span>';
+
+        /* meals */
+        var meals = db.meals.filter(inToday).sort(function(a,b){ return b.ts - a.ts; });
+        var limit = +db.settings.carbLimit || 0;
+        if(!meals.length){
+          $("todayMeals").innerHTML = '<p class="muted" style="margin:0">هنوز وعده‌ای برای امروز ثبت نشده است.</p>';
+        } else {
+          var total = meals.reduce(function(s,e){ return s + (+e.net || 0); }, 0);
+          var html = '<div class="big-num">' + faNum(total) + ' <span class="unit">گرم کربوهیدرات خالص در مجموع امروز</span></div>';
+          meals.forEach(function(e){
+            var over = limit > 0 && e.net > limit;
+            html += '<div class="rowline"><span>' + esc(e.name) + '</span><b>' + faNum(e.net) + ' گرم</b>' +
+              (over ? '<span class="chip over">بالای سقف وعده</span>' : '<span class="muted">' + faTime(e.ts) + '</span>') + '</div>';
+          });
+          $("todayMeals").innerHTML = html;
+        }
+      }
+
+      /* ---------- notebook ---------- */
+      var bookFilter = "all";
+      function allEntries(){
+        var out = [];
+        db.glucose.forEach(function(e){
+          out.push({ kind:"glucose", ts:e.ts, id:e.id, icon:IC.glucose,
+            t:"قند خون — " + faNum(e.value) + " میلی‌گرم",
+            d:(e.type === "fasting" ? "ناشتا" : "بعد از غذا") + " · ساعت " + faTime(e.ts) + (e.note ? " · " + esc(e.note) : "") });
+        });
+        db.meals.forEach(function(e){
+          var limit = +db.settings.carbLimit || 0;
+          var over = limit > 0 && e.net > limit;
+          out.push({ kind:"meal", ts:e.ts, id:e.id, icon:IC.meal,
+            t: esc(e.name),
+            d:"کربوهیدرات خالص " + faNum(e.net) + " گرم" + (e.total ? " (کل " + faNum(e.total) + "، فیبر " + faNum(e.fiber || 0) + ")" : "") +
+              " · ساعت " + faTime(e.ts) + (over ? ' · <span style="color:var(--red);font-weight:700">بالای سقف وعده</span>' : "") });
+        });
+        db.walks.forEach(function(e){
+          out.push({ kind:"walk", ts:e.ts, id:e.id, icon:IC.walk,
+            t:"پیاده‌روی — " + faNum(e.km) + " کیلومتر",
+            d:"ساعت " + faTime(e.ts) + (e.steps ? " · " + faNum(e.steps) + " قدم" : "") });
+        });
+        Object.keys(db.medLog).forEach(function(key){
+          var parts = key.split("|");
+          var med = db.meds.filter(function(m){ return m.id === parts[1]; })[0];
+          out.push({ kind:"med", ts: tsFromDateTime(parts[0], parts[2]), doseKey:key, icon:IC.med,
+            t:"دارو — " + esc(med ? med.name : "دارو") + (med && med.dose ? " " + esc(med.dose) : ""),
+            d:"خورده شد · نوبت ساعت " + faNum(parts[2]) });
+        });
+        out.sort(function(a,b){ return b.ts - a.ts; });
+        return out;
+      }
+      function renderBook(){
+        var list = allEntries().filter(function(e){ return bookFilter === "all" || e.kind === bookFilter; });
+        if(!list.length){
+          $("bookList").innerHTML = '<div class="empty">هنوز چیزی این‌جا ثبت نشده است.<br/>از صفحهٔ «ثبت سریع» شروع کنید.</div>';
+          return;
+        }
+        var html = "", lastDay = "";
+        list.forEach(function(e){
+          var dk = dayKey(e.ts);
+          if(dk !== lastDay){
+            lastDay = dk;
+            html += '<div class="day-title">' + dayLabel(e.ts) + '<span>' +
+              new Intl.DateTimeFormat("fa-IR", { day:"numeric", month:"numeric", year:"numeric" }).format(new Date(e.ts)) + '</span></div>';
+          }
+          var del = e.kind === "med"
+            ? '<button class="del" data-untick="' + esc(e.doseKey) + '">برداشتن تیک</button>'
+            : '<button class="del" data-del="' + e.kind + ':' + e.id + '">حذف</button>';
+          html += '<div class="entry"><span class="ic">' + e.icon + '</span><div class="main"><div class="t">' +
+            e.t + '</div><div class="d">' + e.d + '</div></div>' + del + '</div>';
+        });
+        $("bookList").innerHTML = html;
+      }
+
+      /* ---------- report ---------- */
+      var repRange = "week";
+      function rangeDays(){ return repRange === "week" ? 7 : 30; }
+      function dayStats(ts){
+        var start = new Date(ts); start.setHours(0,0,0,0);
+        var s = start.getTime(), e = s + 86400000, dk = dayKey(s);
+        var g = db.glucose.filter(function(x){ return x.ts >= s && x.ts < e; });
+        var f = g.filter(function(x){ return x.type === "fasting"; });
+        var a = g.filter(function(x){ return x.type !== "fasting"; });
+        var avg = function(arr){ return arr.length ? Math.round(arr.reduce(function(sm,x){ return sm + (+x.value||0); },0) / arr.length) : null; };
+        var km = db.walks.filter(function(x){ return x.ts >= s && x.ts < e; })
+                         .reduce(function(sm,x){ return sm + (+x.km||0); }, 0);
+        var meals = db.meals.filter(function(x){ return x.ts >= s && x.ts < e; });
+        var net = meals.reduce(function(sm,x){ return sm + (+x.net||0); }, 0);
+        var limit = +db.settings.carbLimit || 0;
+        var over = limit > 0 ? meals.filter(function(x){ return x.net > limit; }).length : 0;
+        var doses = dosesForDay(s);
+        var taken = doses.filter(function(d){ return d.taken; }).length;
+        return { ts:s, dk:dk, fasting:avg(f), after:avg(a), km:km, net:net, over:over,
+                 taken:taken, scheduled:doses.length };
+      }
+      function collectStats(){
+        var days = [], n = rangeDays();
+        for(var i = n - 1; i >= 0; i--){ days.push(dayStats(Date.now() - i * 86400000)); }
+        return days;
+      }
+      function barChart(days, getVal, maxVal, unit){
+        var W = 640, H = 190, base = 150, bw = Math.floor((W - 20) / days.length);
+        var s = '<svg viewBox="0 0 ' + W + ' ' + H + '" style="width:100%;height:auto" role="img">';
+        s += '<line x1="8" y1="' + base + '" x2="' + (W - 8) + '" y2="' + base + '" stroke="var(--line)" stroke-width="2"/>';
+        days.forEach(function(d, i){
+          var v = getVal(d) || 0;
+          var h = maxVal > 0 ? Math.round((v / maxVal) * 105) : 0;
+          var x = 12 + i * bw + 3, w = bw - 6;
+          if(v > 0){
+            s += '<rect x="' + x + '" y="' + (base - h) + '" width="' + w + '" height="' + h + '" rx="4" fill="var(--brand)"/>';
+            s += '<text x="' + (x + w/2) + '" y="' + (base - h - 6) + '" text-anchor="middle" font-size="13" font-weight="700" fill="var(--ink)">' + faNum(Math.round(v * 10) / 10) + '</text>';
+          }
+          var wd = new Intl.DateTimeFormat("fa-IR", { weekday:"narrow" }).format(new Date(d.ts));
+          s += '<text x="' + (x + w/2) + '" y="' + (base + 22) + '" text-anchor="middle" font-size="12.5" fill="var(--muted)">' + wd + '</text>';
+        });
+        return s + '</svg><p class="hint" style="margin:2px 0 0">واحد: ' + unit + '</p>';
+      }
+      function renderReport(){
+        var days = collectStats();
+        var hasData = days.some(function(d){ return d.fasting !== null || d.after !== null || d.km > 0 || d.net > 0 || d.taken > 0; });
+        var periodName = repRange === "week" ? "هفتهٔ گذشته" : "ماه گذشته";
+        if(!hasData){
+          $("reportBody").innerHTML = '<div class="empty">برای این بازه هنوز ثبتی نیست.<br/>چند روز که ثبت کنید، گزارش همین‌جا ساخته می‌شود.</div>';
+          $("printSheet").innerHTML = "";
+          return;
+        }
+        var fVals = days.map(function(d){ return d.fasting; }).filter(function(v){ return v !== null; });
+        var aVals = days.map(function(d){ return d.after; }).filter(function(v){ return v !== null; });
+        var mean = function(a){ return a.length ? Math.round(a.reduce(function(x,y){ return x+y; },0) / a.length) : null; };
+        var totalKm = days.reduce(function(s,d){ return s + d.km; }, 0);
+        var goal = +db.settings.walkGoalKm || 0;
+        var goalDays = goal > 0 ? days.filter(function(d){ return d.km >= goal; }).length : 0;
+        var overMeals = days.reduce(function(s,d){ return s + d.over; }, 0);
+        var sched = days.reduce(function(s,d){ return s + d.scheduled; }, 0);
+        var taken = days.reduce(function(s,d){ return s + d.taken; }, 0);
+        var adh = sched > 0 ? Math.round(taken / sched * 100) : null;
+
+        var tiles =
+          '<div class="tile"><div class="v">' + faNum(mean(fVals)) + '</div><div class="k">میانگین قند ناشتا (میلی‌گرم)</div></div>' +
+          '<div class="tile"><div class="v">' + faNum(mean(aVals)) + '</div><div class="k">میانگین قند بعد از غذا (میلی‌گرم)</div></div>' +
+          '<div class="tile"><div class="v">' + faNum(Math.round(totalKm * 10) / 10) + ' <span class="unit">کم</span></div><div class="k">مجموع پیاده‌روی — ' + faNum(goalDays) + ' روز در هدف</div></div>' +
+          '<div class="tile"><div class="v">' + (adh === null ? "—" : faNum(adh) + "٪") + '</div><div class="k">داروهای خورده‌شده از نوبت‌ها (' + faNum(taken) + ' از ' + faNum(sched) + ')</div></div>';
+
+        var rows = days.slice().reverse().map(function(d){
+          return '<tr><td>' + new Intl.DateTimeFormat("fa-IR", { weekday:"short", day:"numeric", month:"numeric" }).format(new Date(d.ts)) + '</td>' +
+            '<td>' + faNum(d.fasting) + '</td><td>' + faNum(d.after) + '</td>' +
+            '<td>' + faNum(Math.round(d.km * 10) / 10) + '</td><td>' + faNum(d.net) + '</td>' +
+            '<td>' + (d.scheduled ? faNum(d.taken) + ' از ' + faNum(d.scheduled) : "—") + '</td></tr>';
+        }).join("");
+        var table = '<div class="tablewrap"><table class="rep"><thead><tr><th>روز</th><th>قند ناشتا</th><th>قند بعد از غذا</th><th>پیاده‌روی (کم)</th><th>کرب خالص (گرم)</th><th>دارو</th></tr></thead><tbody>' + rows + '</tbody></table></div>';
+
+        var maxKm = Math.max.apply(null, days.map(function(d){ return d.km; }).concat([goal, 1]));
+        var charts = '<div class="chart-box"><h3>پیاده‌روی روزانه (کیلومتر)</h3>' + barChart(days, function(d){ return d.km; }, maxKm, "کیلومتر") + '</div>';
+
+        $("reportBody").innerHTML =
+          '<div class="tiles">' + tiles + '</div>' + charts +
+          '<div class="card"><h3>جزئیات روزبه‌روز — ' + periodName + '</h3>' + table +
+          (overMeals ? '<p style="margin:12px 0 0"><span class="chip over">' + faNum(overMeals) + ' وعده بالای سقف کربوهیدرات</span></p>' : '') + '</div>';
+
+        /* print sheet for the doctor */
+        var gen = new Intl.DateTimeFormat("fa-IR", { day:"numeric", month:"long", year:"numeric" }).format(new Date());
+        $("printSheet").innerHTML =
+          '<h1>گزارش سلامت‌یار — ' + periodName + '</h1>' +
+          '<p class="meta">تاریخ تهیه: ' + gen + ' · این گزارش فقط خلاصهٔ ثبت‌های شخصی کاربر است.</p>' +
+          '<table><tr><th>شاخص</th><th>مقدار</th></tr>' +
+          '<tr><td>میانگین قند ناشتا</td><td>' + faNum(mean(fVals)) + ' میلی‌گرم بر دسی‌لیتر</td></tr>' +
+          '<tr><td>میانگین قند بعد از غذا</td><td>' + faNum(mean(aVals)) + ' میلی‌گرم بر دسی‌لیتر</td></tr>' +
+          '<tr><td>مجموع پیاده‌روی</td><td>' + faNum(Math.round(totalKm * 10) / 10) + ' کیلومتر (' + faNum(goalDays) + ' روز در هدف ' + faNum(goal) + ' کیلومتری)</td></tr>' +
+          '<tr><td>مصرف دارو</td><td>' + (adh === null ? "—" : faNum(taken) + ' از ' + faNum(sched) + ' نوبت (' + faNum(adh) + '٪)') + '</td></tr>' +
+          '<tr><td>وعده‌های بالای سقف کربوهیدرات (' + faNum(db.settings.carbLimit) + ' گرم)</td><td>' + faNum(overMeals) + ' وعده</td></tr></table>' +
+          '<h2>جزئیات روزبه‌روز</h2>' + table +
+          '<p class="foot">سلامت‌یار ابزار ثبت و یادآوری است و جنبهٔ تشخیصی یا درمانی ندارد؛ اعداد بالا عیناً از ثبت‌های کاربر گرفته شده‌اند.</p>';
+      }
+
+      /* ---------- settings ---------- */
+      function renderSettings(){
+        $("goalWalk").value = db.settings.walkGoalKm;
+        $("goalCarb").value = db.settings.carbLimit;
+        if(!db.meds.length){
+          $("medList").innerHTML = '<p class="muted">هنوز دارویی اضافه نشده است؛ فرم زیر را پر کنید.</p>';
+        } else {
+          $("medList").innerHTML = db.meds.map(function(m){
+            return '<div class="med-item"><div class="info"><b>' + esc(m.name) + '</b>' +
+              (m.dose ? ' <span class="muted">' + esc(m.dose) + '</span>' : '') +
+              '<div class="muted">ساعت‌ها: ' + (m.times || []).map(faNum).join(" و ") + '</div></div>' +
+              '<button class="del" data-delmed="' + m.id + '" style="background:none;border:none;color:var(--red);font-weight:700;min-height:44px;padding:8px 10px">حذف</button></div>';
+          }).join("");
+        }
+      }
+
+      function renderAll(){ renderToday(); renderBook(); renderReport(); renderSettings(); }
+
+      /* ---------- navigation ---------- */
+      $("bottomNav").addEventListener("click", function(e){
+        var b = e.target.closest("button[data-view]"); if(!b) return;
+        var v = b.getAttribute("data-view");
+        document.querySelectorAll("nav.bottom button").forEach(function(x){ x.classList.toggle("on", x === b); });
+        document.querySelectorAll(".view").forEach(function(x){ x.classList.remove("active"); });
+        $("view-" + v).classList.add("active");
+        window.scrollTo(0, 0);
+      });
+
+      /* ---------- bottom sheet forms ---------- */
+      var overlay = $("overlay"), sheet = $("sheet");
+      function openSheet(html){ sheet.innerHTML = html; overlay.classList.add("open"); }
+      function closeSheet(){ overlay.classList.remove("open"); sheet.innerHTML = ""; }
+      overlay.addEventListener("click", function(e){ if(e.target === overlay) closeSheet(); });
+
+      function dateTimeFields(){
+        return '<label class="flabel">تاریخ</label><input class="field" type="date" id="fDate" value="' + todayDateValue() + '">' +
+               '<label class="flabel">ساعت</label><input class="field" type="time" id="fTime" value="' + nowTimeValue() + '">';
+      }
+      function sheetTs(){ return tsFromDateTime($("fDate").value, $("fTime").value); }
+
+      function openGlucose(){
+        openSheet(
+          '<h3>ثبت قند خون</h3><p class="sub">مقدار را از روی دستگاه قندتان بنویسید.</p>' +
+          '<label class="flabel">قند خون (میلی‌گرم بر دسی‌لیتر)</label>' +
+          '<input class="field" id="fVal" type="number" inputmode="numeric" min="20" max="600" placeholder="مثلاً ۱۱۸" style="font-size:1.3rem;font-weight:800">' +
+          '<label class="flabel">نوع اندازه‌گیری</label>' +
+          '<div class="seg" id="fTypeSeg"><button type="button" data-t="fasting" class="on">ناشتا</button><button type="button" data-t="after">بعد از غذا</button></div>' +
+          dateTimeFields() +
+          '<label class="flabel">یادداشت (اختیاری)</label><input class="field" id="fNote" type="text" placeholder="مثلاً قبل از صبحانه">' +
+          '<button class="btn" id="fSave" style="margin-top:18px">ثبت قند</button>' +
+          '<button class="btn secondary" id="fCancel">انصراف</button>');
+        var type = "fasting";
+        $("fTypeSeg").addEventListener("click", function(e){
+          var b = e.target.closest("button"); if(!b) return;
+          type = b.getAttribute("data-t");
+          this.querySelectorAll("button").forEach(function(x){ x.classList.toggle("on", x === b); });
+        });
+        $("fCancel").onclick = closeSheet;
+        $("fSave").onclick = function(){
+          var v = parseInt(toLatin($("fVal").value), 10);
+          if(!v || v < 20 || v > 600){ toast("مقدار قند را درست وارد کنید"); return; }
+          db.glucose.push({ id:uid(), value:v, type:type, ts:sheetTs(), note:$("fNote").value.trim() });
+          save(); closeSheet(); renderAll(); toast("قند خون ثبت شد");
+        };
+        $("fVal").focus();
+      }
+
+      function openMeal(){
+        openSheet(
+          '<h3>ثبت وعدهٔ غذا</h3><p class="sub">کربوهیدرات خالص = کربوهیدرات کل منهای فیبر؛ خودش حساب می‌شود.</p>' +
+          '<label class="flabel">نام غذا / وعده</label><input class="field" id="fName" type="text" placeholder="مثلاً ناهار: برنج و مرغ">' +
+          '<label class="flabel">کربوهیدرات کل (گرم)</label><input class="field" id="fTotal" type="number" inputmode="numeric" min="0" placeholder="۰">' +
+          '<label class="flabel">فیبر (گرم)</label><input class="field" id="fFiber" type="number" inputmode="numeric" min="0" value="0">' +
+          '<div class="net-out" id="netOut"><span>کربوهیدرات خالص</span><span class="v" id="netVal">۰ گرم</span></div>' +
+          '<p class="hint" id="netWarn"></p>' +
+          dateTimeFields() +
+          '<button class="btn" id="fSave" style="margin-top:14px">ثبت وعده</button>' +
+          '<button class="btn secondary" id="fCancel">انصراف</button>');
+        function upd(){
+          var total = parseFloat(toLatin($("fTotal").value)) || 0;
+          var fiber = parseFloat(toLatin($("fFiber").value)) || 0;
+          var net = Math.max(0, Math.round((total - fiber) * 10) / 10);
+          $("netVal").textContent = faNum(net) + " گرم";
+          var limit = +db.settings.carbLimit || 0;
+          var over = limit > 0 && net > limit;
+          $("netOut").classList.toggle("over", over);
+          $("netWarn").textContent = over ? "هشدار: این وعده از سقف هر وعده (" + faNum(limit) + " گرم) بیشتر است." : "";
+          return net;
+        }
+        $("fTotal").addEventListener("input", upd);
+        $("fFiber").addEventListener("input", upd);
+        $("fCancel").onclick = closeSheet;
+        $("fSave").onclick = function(){
+          var name = $("fName").value.trim();
+          var total = parseFloat(toLatin($("fTotal").value));
+          if(!name){ toast("نام غذا را بنویسید"); return; }
+          if(isNaN(total)){ toast("کربوهیدرات کل را وارد کنید"); return; }
+          var fiber = parseFloat(toLatin($("fFiber").value)) || 0;
+          var net = Math.max(0, Math.round((total - fiber) * 10) / 10);
+          db.meals.push({ id:uid(), name:name, total:total, fiber:fiber, net:net, ts:sheetTs() });
+          save(); closeSheet(); renderAll(); toast("وعده ثبت شد");
+        };
+        $("fName").focus();
+      }
+
+      function openWalk(){
+        openSheet(
+          '<h3>ثبت پیاده‌روی</h3><p class="sub">مسافت را به کیلومتر بنویسید؛ قدم‌ها اختیاری است.</p>' +
+          '<label class="flabel">مسافت (کیلومتر)</label><input class="field" id="fKm" type="number" inputmode="decimal" step="0.1" min="0" placeholder="مثلاً ۳٫۲" style="font-size:1.3rem;font-weight:800">' +
+          '<label class="flabel">تعداد قدم (اختیاری)</label><input class="field" id="fSteps" type="number" inputmode="numeric" min="0" placeholder="۰">' +
+          dateTimeFields() +
+          '<button class="btn" id="fSave" style="margin-top:18px">ثبت پیاده‌روی</button>' +
+          '<button class="btn secondary" id="fCancel">انصراف</button>');
+        $("fCancel").onclick = closeSheet;
+        $("fSave").onclick = function(){
+          var km = parseFloat(toLatin($("fKm").value));
+          if(!km || km <= 0){ toast("مسافت را وارد کنید"); return; }
+          var steps = parseInt(toLatin($("fSteps").value), 10) || null;
+          db.walks.push({ id:uid(), km:Math.round(km * 100) / 100, steps:steps, ts:sheetTs() });
+          save(); closeSheet(); renderAll(); toast("پیاده‌روی ثبت شد");
+        };
+        $("fKm").focus();
+      }
+
+      function openMed(){
+        if(!db.meds.length){
+          openSheet('<h3>دارو خوردم</h3><p class="sub">هنوز دارویی تعریف نشده است. اول از صفحهٔ «تنظیمات» داروهایتان را با ساعت مصرف اضافه کنید.</p>' +
+            '<button class="btn" id="fGo">رفتن به تنظیمات</button><button class="btn secondary" id="fCancel">بستن</button>');
+          $("fCancel").onclick = closeSheet;
+          $("fGo").onclick = function(){
+            closeSheet();
+            document.querySelector('nav.bottom button[data-view="settings"]').click();
+          };
+          return;
+        }
+        var doses = dosesForDay(Date.now());
+        openSheet('<h3>کدام نوبت را خوردید؟</h3><p class="sub">روی نوبت بزنید تا تیک بخورد؛ دوباره بزنید، تیک برداشته می‌شود.</p>' +
+          doses.map(function(d){ return doseRow(d, true); }).join("") +
+          '<button class="btn secondary" id="fCancel" style="margin-top:6px">بستن</button>');
+        $("fCancel").onclick = closeSheet;
+      }
+
+      document.querySelectorAll("[data-log]").forEach(function(b){
+        b.addEventListener("click", function(){
+          var k = b.getAttribute("data-log");
+          if(k === "glucose") openGlucose();
+          else if(k === "meal") openMeal();
+          else if(k === "walk") openWalk();
+          else if(k === "med") openMed();
+        });
+      });
+
+      /* dose toggles (event delegation, works in Today + sheet) */
+      document.addEventListener("click", function(e){
+        var d = e.target.closest("[data-dose]");
+        if(d){
+          toggleDose(d.getAttribute("data-dose"));
+          if(overlay.classList.contains("open")) openMed();
+          toast("وضعیت دارو به‌روز شد"); return;
+        }
+        var del = e.target.closest("[data-del]");
+        if(del){
+          var parts = del.getAttribute("data-del").split(":");
+          var kind = parts[0], id = parts[1];
+          var coll = kind === "glucose" ? db.glucose : kind === "meal" ? db.meals : db.walks;
+          db[kind === "glucose" ? "glucose" : kind === "meal" ? "meals" : "walks"] =
+            coll.filter(function(x){ return x.id !== id; });
+          save(); renderAll(); toast("حذف شد"); return;
+        }
+        var un = e.target.closest("[data-untick]");
+        if(un){ delete db.medLog[un.getAttribute("data-untick")]; save(); renderAll(); toast("تیک برداشته شد"); return; }
+        var dm = e.target.closest("[data-delmed]");
+        if(dm){
+          var mid = dm.getAttribute("data-delmed");
+          db.meds = db.meds.filter(function(m){ return m.id !== mid; });
+          save(); renderAll(); toast("دارو حذف شد");
+        }
+      });
+
+      /* notebook filters */
+      $("bookFilters").addEventListener("click", function(e){
+        var b = e.target.closest("button[data-f]"); if(!b) return;
+        bookFilter = b.getAttribute("data-f");
+        this.querySelectorAll("button").forEach(function(x){ x.classList.toggle("on", x === b); });
+        renderBook();
+      });
+
+      /* report range */
+      $("repSeg").addEventListener("click", function(e){
+        var b = e.target.closest("button[data-r]"); if(!b) return;
+        repRange = b.getAttribute("data-r");
+        this.querySelectorAll("button").forEach(function(x){ x.classList.toggle("on", x === b); });
+        renderReport();
+      });
+      $("btnPrint").addEventListener("click", function(){ renderReport(); window.print(); });
+      $("btnDownloadReport").addEventListener("click", function(){
+        renderReport();
+        var html = '<!doctype html><html lang="fa" dir="rtl"><head><meta charset="utf-8"><title>گزارش سلامت‌یار</title>' +
+          '<style>body{font-family:Tahoma,sans-serif;line-height:1.8}table{width:100%;border-collapse:collapse}th,td{border:1px solid #999;padding:5px 7px;text-align:center}td:first-child,th:first-child{text-align:right}</style></head><body>' +
+          $("printSheet").innerHTML + '<script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){})});}</script>
+</body></html>';
+        download("salamatyar-report.html", html, "text/html");
+        toast("فایل گزارش دانلود شد");
+      });
+
+      /* ---------- settings forms ---------- */
+      $("medForm").addEventListener("submit", function(e){
+        e.preventDefault();
+        var name = $("medName").value.trim();
+        var dose = $("medDose").value.trim();
+        var raw = toLatin($("medTimes").value);
+        var times = (raw.match(/\d{1,2}:\d{2}/g) || []).map(function(t){
+          var p = t.split(":"); return String(Math.min(23, +p[0])).padStart(2,"0") + ":" + String(Math.min(59, +p[1])).padStart(2,"0");
+        });
+        times = times.filter(function(t, i){ return times.indexOf(t) === i; });
+        if(!name){ toast("نام دارو را بنویسید"); return; }
+        if(!times.length){ toast("دست‌کم یک ساعت مصرف بنویسید"); return; }
+        db.meds.push({ id:uid(), name:name, dose:dose, times:times });
+        save(); $("medName").value = ""; $("medDose").value = ""; $("medTimes").value = "";
+        renderAll(); toast("دارو اضافه شد");
+      });
+      $("goalForm").addEventListener("submit", function(e){
+        e.preventDefault();
+        var w = parseFloat(toLatin($("goalWalk").value));
+        var c = parseFloat(toLatin($("goalCarb").value));
+        if(!isNaN(w) && w >= 0) db.settings.walkGoalKm = w;
+        if(!isNaN(c) && c >= 0) db.settings.carbLimit = c;
+        save(); renderAll(); toast("هدف‌ها ذخیره شد");
+      });
+
+      /* ---------- data tools ---------- */
+      function download(name, content, type){
+        var blob = new Blob([content], { type: type + ";charset=utf-8" });
+        var a = document.createElement("a");
+        a.href = URL.createObjectURL(blob); a.download = name;
+        document.body.appendChild(a); a.click();
+        setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 400);
+      }
+      $("btnExport").addEventListener("click", function(){
+        download("salamatyar-backup.json", JSON.stringify(db, null, 2), "application/json");
+        toast("نسخهٔ پشتیبان دانلود شد");
+      });
+      $("importFile").addEventListener("change", function(){
+        var f = this.files && this.files[0]; if(!f) return;
+        var r = new FileReader();
+        r.onload = function(){
+          try{
+            var d = JSON.parse(r.result), b = blankDb();
+            for(var k in b){ if(d[k] === undefined) d[k] = b[k]; }
+            db = d; save(); renderAll(); toast("داده‌ها بازیابی شد");
+          }catch(e){ toast("این فایل نسخهٔ پشتیبان معتبر نیست"); }
+        };
+        r.readAsText(f); this.value = "";
+      });
+      $("btnTestDay").addEventListener("click", function(){
+        var start = todayStart();
+        var med = db.meds[0];
+        if(!med){
+          med = { id:uid(), name:"متفورمین", dose:"۵۰۰ میلی‌گرم", times:["08:00","20:00"] };
+          db.meds.push(med);
+        }
+        db.glucose.push({ id:uid(), value:118, type:"fasting", ts:start + 7.5 * 3600000, note:"روز آزمایشی" });
+        db.medLog[dayKey(Date.now()) + "|" + med.id + "|" + (med.times[0] || "08:00")] = Date.now();
+        db.meals.push({ id:uid(), name:"ناهار: برنج و مرغ (آزمایشی)", total:65, fiber:5, net:60, ts:start + 13 * 3600000 });
+        db.walks.push({ id:uid(), km:3.2, steps:4200, ts:start + 18 * 3600000 });
+        save(); renderAll(); toast("روز آزمایشی ثبت شد — صفحهٔ «امروز» را ببینید");
+        document.querySelector('nav.bottom button[data-view="today"]').click();
+      });
+      $("btnClear").addEventListener("click", function(){
+        openSheet('<h3>حذف همهٔ داده‌ها؟</h3><p class="sub">همهٔ ثبت‌ها، داروها و تیک‌ها پاک می‌شود و برگشتی ندارد. اگر نسخهٔ پشتیبان ندارید، اول از بخش «داده‌های من» پشتیبان بگیرید.</p>' +
+          '<button class="btn danger" id="cYes">بله، همه را حذف کن</button><button class="btn secondary" id="cNo">انصراف</button>');
+        $("cNo").onclick = closeSheet;
+        $("cYes").onclick = function(){
+          db = blankDb(); save(); closeSheet(); renderAll(); toast("همهٔ داده‌ها حذف شد");
+        };
+      });
+
+      renderAll();
+    })();
+    </script>
+  </body>
+</html>
